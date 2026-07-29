@@ -3,17 +3,1322 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio</title>
+  <title>KANTEK · Configurador de Pedidos</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <main class="page">
-    <nav class="nav-buttons" aria-label="Navegación principal">
-      <a class="btn active" href="index.html">Inicio</a>
-      <a class="btn" href="productos.html">Productos</a>
-      <a class="btn" href="contacto.html">Contacto</a>
-    </nav>
-    <h1>Inicio</h1>
+<body class="configurador">
+  <div class="page-bg" aria-hidden="true"></div>
+
+  <header class="top-bar">
+    <img
+      class="top-bar-logo"
+      src="assets/kantek-logo.png"
+      alt="KANTEK"
+      width="180"
+      height="68"
+    >
+  </header>
+
+  <aside class="sidebar" aria-label="Resumen y acciones del pedido">
+    <div class="sidebar-section sidebar-total-block">
+      <span class="resumen-label">Total del pedido</span>
+      <span class="resumen-valor">
+        <span class="total-kg-slot"><span id="total-kg">0</span></span>
+        <span class="total-kg-unit">kg</span>
+      </span>
+      <span class="resumen-limites">Mínimo 700 kg · Máximo 900 kg por pallet</span>
+    </div>
+
+    <div
+      id="pallet-status"
+      class="pallet-status pallet-status--empty"
+      role="status"
+      aria-live="polite"
+    >
+      <p class="pallet-status__title">Estado del pedido</p>
+      <p class="pallet-status__body">Agrega productos para ver el armado por pallets.</p>
+    </div>
+
+    <div class="sidebar-actions">
+      <button type="button" class="btn-cargar" id="btn-cargar">CARGAR CARRITO 🛒</button>
+      <button type="button" class="btn-borrar" id="btn-borrar">BORRAR TODO</button>
+    </div>
+  </aside>
+
+  <div
+    id="validacion-msg"
+    class="validacion-msg"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></div>
+
+  <main class="config-page">
+    <div class="page-intro">
+      <h1 class="config-title">Configurador de Pedidos</h1>
+      <p class="config-subtitle">Armado de pedidos por pallet</p>
+    </div>
+
+    <section class="productos" aria-label="Productos disponibles">
+      <!-- KANTEK Cachorro -->
+      <article class="producto-card" data-line="cachorro">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Cachorro</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="cachorro" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Cachorro 2 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">8 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="cachorro" data-kg="8" data-piece-kg="8" aria-label="Cantidad de bolsas KANTEK Cachorro 8 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">20 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="cachorro" data-kg="20" data-piece-kg="20" aria-label="Cantidad de bolsas KANTEK Cachorro 20 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KANTEK Adulto -->
+      <article class="producto-card" data-line="adulto">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Adulto</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="adulto" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Adulto 2 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">8 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="adulto" data-kg="8" data-piece-kg="8" aria-label="Cantidad de bolsas KANTEK Adulto 8 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">20 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="adulto" data-kg="20" data-piece-kg="20" aria-label="Cantidad de bolsas KANTEK Adulto 20 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KANTEK Veteranos -->
+      <article class="producto-card" data-line="veteranos">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Veteranos</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="veteranos" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Veteranos 2 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">15 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="veteranos" data-kg="15" data-piece-kg="15" aria-label="Cantidad de bolsas KANTEK Veteranos 15 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KANTEK Adulto Razas Pequeñas -->
+      <article class="producto-card" data-line="razas-pequenas">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Adulto Razas Pequeñas</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="razas-pequenas" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Adulto Razas Pequeñas 2 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">8 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="razas-pequenas" data-kg="8" data-piece-kg="8" aria-label="Cantidad de bolsas KANTEK Adulto Razas Pequeñas 8 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KANTEK Activo -->
+      <article class="producto-card" data-line="activo">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Activo</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="activo" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Activo 2 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">20 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="activo" data-kg="20" data-piece-kg="20" aria-label="Cantidad de bolsas KANTEK Activo 20 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KANTEK Felinos -->
+      <article class="producto-card" data-line="felinos">
+        <div class="producto-card__accent" aria-hidden="true"></div>
+        <h2 class="producto-nombre">KANTEK Felinos</h2>
+        <div class="presentaciones">
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 12 pzs de 1.5 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="felinos" data-kg="18" data-piece-kg="1.5" aria-label="Cantidad de cajas KANTEK Felinos 1.5 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">Caja de 6 pzs de 3 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="felinos" data-kg="18" data-piece-kg="3" aria-label="Cantidad de cajas KANTEK Felinos 3 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+          <div class="presentacion">
+            <span class="presentacion-peso">6 kg</span>
+            <div class="qty-controls">
+              <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
+              <input type="number" min="0" step="1" value="0" data-product="felinos" data-kg="6" data-piece-kg="6" aria-label="Cantidad de bolsas KANTEK Felinos 6 kg">
+              <button type="button" class="btn-qty btn-plus" tabindex="-1" aria-label="Sumar cantidad">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
   </main>
+
+  <!-- Modal cargar carrito -->
+  <div
+    id="modal-finalizar"
+    class="modal"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-finalizar-titulo"
+  >
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__panel">
+      <h2 id="modal-finalizar-titulo" class="modal__title">Cargar carrito</h2>
+      <div class="modal__summary">
+        <p class="modal__summary-line">
+          Cantidad de tarimas:
+          <strong id="modal-tarimas">0</strong>
+        </p>
+        <p class="modal__summary-line">
+          Total de kilogramos:
+          <strong id="modal-total-kg">0</strong> kg
+        </p>
+        <p class="modal__summary-line">
+          kg sobrantes sin pallet:
+          <strong id="modal-sobrantes-pallet">0</strong> kg
+        </p>
+      </div>
+      <p id="modal-alerta-sobrantes" class="modal__alerta" hidden>
+        ALERTA: Los kg sin pallet se enviarán en un pallet aparte con cobro de flete completo.
+      </p>
+      <p class="modal__text" id="modal-finalizar-texto">
+        ¿Confirmas cargar este pedido al carrito?
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn-modal btn-modal--confirm" id="btn-modal-si">
+          Sí, cargar.
+        </button>
+        <button type="button" class="btn-modal btn-modal--cancel" id="btn-modal-no" data-modal-close>
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script>
+    (function () {
+      const MIN_PALLET_KG = 700;
+      const MAX_PALLET_KG = 900;
+      const TARIMA_M = 0.13;
+      const MAX_PALLET_HEIGHT_M = 1.7;
+      const MAX_STACK_M = MAX_PALLET_HEIGHT_M - TARIMA_M; // 1.57 m de camas
+
+      /**
+       * Definición de camas / medias camas.
+       * qty = unidades del configurador (bolsas o cajas según tipo).
+       * Las medias camas usan la misma altura de capa que la cama completa.
+       */
+      const BED_TYPES = [
+        {
+          id: 'A',
+          invKey: 'bag20',
+          fullQty: 5,
+          halfQty: 0,
+          height: 0.16,
+          unitKg: 20,
+          name: 'Cama A',
+          unitName: 'piezas de 20 kg',
+        },
+        {
+          id: 'B',
+          invKey: 'bag15',
+          fullQty: 6,
+          halfQty: 3,
+          height: 0.12,
+          unitKg: 15,
+          name: 'Cama B',
+          unitName: 'piezas de 15 kg',
+        },
+        {
+          id: 'C',
+          invKey: 'bag8',
+          fullQty: 8,
+          halfQty: 4,
+          height: 0.12,
+          unitKg: 8,
+          name: 'Cama C',
+          unitName: 'piezas de 8 kg',
+        },
+        {
+          id: 'D',
+          invKey: 'bag6',
+          fullQty: 12,
+          halfQty: 6,
+          height: 0.12,
+          unitKg: 6,
+          name: 'Cama D',
+          unitName: 'piezas de 6 kg',
+        },
+        {
+          id: 'E',
+          invKey: 'box2',
+          fullQty: 6,
+          halfQty: 3,
+          height: 0.24,
+          unitKg: 16, // caja de 8 × 2 kg
+          name: 'Cama E',
+          unitName: 'cajas de 2 kg',
+        },
+        {
+          id: 'F',
+          invKey: 'box1_5',
+          fullQty: 6,
+          halfQty: 3,
+          height: 0.24,
+          unitKg: 18, // caja de 12 × 1.5 kg
+          name: 'Cama F',
+          unitName: 'cajas de 1.5 kg',
+        },
+        {
+          id: 'G',
+          invKey: 'box3',
+          fullQty: 6,
+          halfQty: 3,
+          height: 0.24,
+          unitKg: 18, // caja de 6 × 3 kg
+          name: 'Cama G',
+          unitName: 'cajas de 3 kg',
+        },
+      ];
+
+      const inputs = document.querySelectorAll('.presentaciones input[type="number"]');
+      const totalEl = document.getElementById('total-kg');
+      const palletStatusEl = document.getElementById('pallet-status');
+      const btnBorrar = document.getElementById('btn-borrar');
+      const btnCargar = document.getElementById('btn-cargar');
+      const msgEl = document.getElementById('validacion-msg');
+      const modal = document.getElementById('modal-finalizar');
+      const modalTotalEl = document.getElementById('modal-total-kg');
+      const modalTarimasEl = document.getElementById('modal-tarimas');
+      const modalSobrantesEl = document.getElementById('modal-sobrantes-pallet');
+      const modalAlertaSobrantes = document.getElementById('modal-alerta-sobrantes');
+      const btnModalSi = document.getElementById('btn-modal-si');
+
+      /** Formatea números con coma en millares (ej. 1,200 o 1,234.5). */
+      function formatNumber(value) {
+        const n = Number(value);
+        if (isNaN(n)) return '0';
+
+        const isInt = Number.isInteger(n) || Math.abs(n - Math.round(n)) < 1e-9;
+        const fixed = isInt ? String(Math.round(n)) : n.toFixed(1).replace(/\.0$/, '');
+        const parts = fixed.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+      }
+
+      function formatKg(value) {
+        return formatNumber(value);
+      }
+
+      function roundKg(value) {
+        return Math.round(value * 10) / 10;
+      }
+
+      function palletWord(n) {
+        return n === 1 ? 'pallet' : 'pallets';
+      }
+
+      /**
+       * N pallets válidos si N*700 <= total <= N*900.
+       * Devuelve el mayor N válido, o 0 si no hay ninguno.
+       */
+      function getValidPalletCount(total) {
+        if (total < MIN_PALLET_KG) return 0;
+        const maxN = Math.floor(total / MIN_PALLET_KG);
+        const minN = Math.ceil(total / MAX_PALLET_KG);
+        if (minN > maxN || maxN < 1) return 0;
+        for (let n = maxN; n >= minN; n--) {
+          if (total >= n * MIN_PALLET_KG && total <= n * MAX_PALLET_KG) {
+            return n;
+          }
+        }
+        return 0;
+      }
+
+      /**
+       * Pallets completos (flete subsidiado): cada uno entre 700 y 900 kg.
+       * - Si el total cae en un rango válido N×700…N×900 → N.
+       * - Si no: se pueden llenar floor(total/700) pallets hasta 900 kg c/u.
+       */
+      function getPalletsCompletos(total) {
+        if (total < MIN_PALLET_KG) return 0;
+        const validN = getValidPalletCount(total);
+        if (validN >= 1) return validN;
+        return Math.floor(total / MIN_PALLET_KG);
+      }
+
+      /** @deprecated alias */
+      function getCompletePalletCount(total) {
+        return getPalletsCompletos(total);
+      }
+
+      /**
+       * kg sobrantes sin pallet completo (pallet incompleto, flete completo).
+       * Tras armar el máximo de pallets completos (máx. 900 kg c/u), el resto.
+       * Si el total ya forma N pallets válidos → 0.
+       */
+      function getKgSobrantesSinPallet(total) {
+        if (total <= 0) return 0;
+        if (getValidPalletCount(total) >= 1) return 0;
+
+        const completos = getPalletsCompletos(total);
+        if (completos < 1) {
+          // Todo el peso es un pallet incompleto (no llega a 700 kg)
+          return roundKg(total);
+        }
+
+        const maxLoadCompletos = completos * MAX_PALLET_KG;
+        return roundKg(Math.max(0, total - maxLoadCompletos));
+      }
+
+      /**
+       * Pallets calculados = pallets completos + 1 si hay sobrantes (pallet incompleto).
+       */
+      function getPalletsCalculados(total) {
+        const completos = getPalletsCompletos(total);
+        const sobrantes = getKgSobrantesSinPallet(total);
+        return completos + (sobrantes > 0 ? 1 : 0);
+      }
+
+      /**
+       * kg que faltan para el siguiente número de pallets COMPLETOS
+       * (no considera el pallet incompleto de sobrantes).
+       */
+      function getFaltanParaSiguienteCompleto(total) {
+        const completos = getPalletsCompletos(total);
+        const nextCompletos = completos + 1;
+        const nextMin = nextCompletos * MIN_PALLET_KG;
+        return {
+          nextN: nextCompletos,
+          faltan: roundKg(Math.max(0, nextMin - total)),
+        };
+      }
+
+      function normalizeValue(input) {
+        const n = parseInt(input.value, 10);
+        if (isNaN(n) || n < 0) {
+          input.value = 0;
+          return 0;
+        }
+        input.value = n;
+        return n;
+      }
+
+      function getTotalKg() {
+        let total = 0;
+        inputs.forEach(function (input) {
+          const qty = parseInt(input.value, 10);
+          const kg = parseFloat(input.dataset.kg);
+          if (!isNaN(qty) && qty > 0 && !isNaN(kg)) {
+            total += qty * kg;
+          }
+        });
+        return Math.round(total * 10) / 10;
+      }
+
+      /** Inventario agrupado por tipo de presentación (cama). */
+      function getInventoryByBedType() {
+        const inv = {
+          bag20: 0,
+          bag15: 0,
+          bag8: 0,
+          bag6: 0,
+          box2: 0,
+          box1_5: 0,
+          box3: 0,
+        };
+
+        inputs.forEach(function (input) {
+          const qty = parseInt(input.value, 10);
+          if (isNaN(qty) || qty <= 0) return;
+          const pieceKg = parseFloat(input.dataset.pieceKg);
+          if (pieceKg === 20) inv.bag20 += qty;
+          else if (pieceKg === 15) inv.bag15 += qty;
+          else if (pieceKg === 8) inv.bag8 += qty;
+          else if (pieceKg === 6) inv.bag6 += qty;
+          else if (pieceKg === 2) inv.box2 += qty;
+          else if (pieceKg === 1.5) inv.box1_5 += qty;
+          else if (pieceKg === 3) inv.box3 += qty;
+        });
+
+        return inv;
+      }
+
+      /**
+       * Convierte inventario en camas y medias camas.
+       * Devuelve { beds, leftovers, summary }.
+       */
+      function buildBedsFromInventory(inv) {
+        const beds = [];
+        const leftovers = [];
+        const summary = [];
+
+        BED_TYPES.forEach(function (def) {
+          let qty = inv[def.invKey] || 0;
+          if (qty <= 0) return;
+
+          const fullCount = Math.floor(qty / def.fullQty);
+          qty -= fullCount * def.fullQty;
+
+          let halfCount = 0;
+          if (def.halfQty > 0 && qty >= def.halfQty) {
+            halfCount = Math.floor(qty / def.halfQty);
+            // como media es la mitad de full, a lo sumo 1 media tras restar fulls
+            if (halfCount > 1) halfCount = 1;
+            qty -= halfCount * def.halfQty;
+          }
+
+          for (let i = 0; i < fullCount; i++) {
+            beds.push({
+              id: def.id,
+              name: def.name,
+              half: false,
+              height: def.height,
+              label: def.name + ' completa',
+            });
+          }
+          for (let i = 0; i < halfCount; i++) {
+            beds.push({
+              id: def.id,
+              name: def.name,
+              half: true,
+              height: def.height,
+              label: 'Media ' + def.name,
+            });
+          }
+
+          if (fullCount > 0 || halfCount > 0) {
+            summary.push({
+              id: def.id,
+              full: fullCount,
+              half: halfCount,
+              name: def.name,
+            });
+          }
+
+          if (qty > 0) {
+            leftovers.push({
+              id: def.id,
+              qty: qty,
+              unitKg: def.unitKg,
+              unitName: def.unitName,
+              name: def.name,
+              fullQty: def.fullQty,
+              halfQty: def.halfQty,
+            });
+          }
+        });
+
+        return { beds: beds, leftovers: leftovers, summary: summary };
+      }
+
+      /** Kilogramos de unidades que no forman cama ni media cama. */
+      function getLeftoverWeightKg() {
+        const inv = getInventoryByBedType();
+        const built = buildBedsFromInventory(inv);
+        let kg = 0;
+        built.leftovers.forEach(function (lo) {
+          kg += lo.qty * (lo.unitKg || 0);
+        });
+        return roundKg(kg);
+      }
+
+      function formatHeight(m) {
+        return (Math.round(m * 100) / 100).toFixed(2) + ' m';
+      }
+
+      function roundMeters(m) {
+        return Math.round(m * 100) / 100;
+      }
+
+      /**
+       * Reparte todas las camas entre `numPallets` pallets de forma equilibrada
+       * (siempre al pallet con menor altura de camas acumulada).
+       * Cada pallet: altura total = suma de camas + tarima (0.13 m).
+       */
+      function distributeBedsToPallets(beds, numPallets) {
+        const n = Math.max(1, numPallets || 1);
+        const sorted = beds.slice().sort(function (a, b) {
+          return b.height - a.height;
+        });
+
+        const pallets = [];
+        for (let i = 0; i < n; i++) {
+          pallets.push({
+            stackM: 0,
+            totalM: TARIMA_M,
+            beds: [],
+          });
+        }
+
+        sorted.forEach(function (bed) {
+          let best = 0;
+          for (let p = 1; p < pallets.length; p++) {
+            if (pallets[p].stackM < pallets[best].stackM) best = p;
+          }
+          pallets[best].stackM = roundMeters(pallets[best].stackM + bed.height);
+          pallets[best].totalM = roundMeters(pallets[best].stackM + TARIMA_M);
+          pallets[best].beds.push(bed);
+        });
+
+        return pallets;
+      }
+
+      /**
+       * Calcula armado de camas + reparto en pallets.
+       * targetPallets: N preferido (masa válida o pallets posibles); si null, usa mínimo por altura.
+       */
+      function computePalletHeights(targetPallets) {
+        const inv = getInventoryByBedType();
+        const built = buildBedsFromInventory(inv);
+
+        if (built.beds.length === 0) {
+          return {
+            ok: false,
+            pallets: [],
+            leftovers: built.leftovers,
+            summary: built.summary,
+            note: built.leftovers.length
+              ? 'Unidades incompletas para camas'
+              : 'Sin camas',
+          };
+        }
+
+        let n = targetPallets;
+        if (n == null || n < 1) {
+          const totalStack = built.beds.reduce(function (s, b) {
+            return s + b.height;
+          }, 0);
+          n = Math.max(1, Math.ceil(totalStack / MAX_STACK_M - 1e-9));
+        }
+
+        const pallets = distributeBedsToPallets(built.beds, n);
+        const over = pallets.filter(function (p) {
+          return p.totalM > MAX_PALLET_HEIGHT_M + 1e-9;
+        });
+
+        return {
+          ok: built.leftovers.length === 0 && over.length === 0,
+          pallets: pallets,
+          leftovers: built.leftovers,
+          summary: built.summary,
+          over: over,
+          note:
+            built.leftovers.length > 0
+              ? 'Hay sobrantes sin cama'
+              : over.length > 0
+                ? 'Algún pallet supera 1.70 m'
+                : null,
+        };
+      }
+
+      /** Líneas con cantidad > 0, ordenadas por gramaje de pieza (mayor a menor). */
+      function getOrderLines() {
+        const lines = [];
+        document.querySelectorAll('.producto-card').forEach(function (card) {
+          const productEl = card.querySelector('.producto-nombre');
+          const product = productEl ? productEl.textContent.trim() : '';
+          card.querySelectorAll('.presentacion').forEach(function (row) {
+            const input = row.querySelector('input[type="number"]');
+            if (!input) return;
+            const qty = parseInt(input.value, 10);
+            if (isNaN(qty) || qty <= 0) return;
+            const unitKg = parseFloat(input.dataset.kg);
+            const pieceKg = parseFloat(input.dataset.pieceKg);
+            const presentacionEl = row.querySelector('.presentacion-peso');
+            const presentacion = presentacionEl
+              ? presentacionEl.textContent.trim()
+              : '';
+            const lineKg = Math.round(qty * unitKg * 10) / 10;
+            lines.push({
+              product: product,
+              presentacion: presentacion,
+              qty: qty,
+              kg: lineKg,
+              pieceKg: isNaN(pieceKg) ? unitKg : pieceKg,
+            });
+          });
+        });
+        lines.sort(function (a, b) {
+          if (b.pieceKg !== a.pieceKg) return b.pieceKg - a.pieceKg;
+          return a.product.localeCompare(b.product, 'es');
+        });
+        return lines;
+      }
+
+      function clearValidationMessage() {
+        if (!msgEl) return;
+        msgEl.hidden = true;
+        msgEl.textContent = '';
+        msgEl.classList.remove('validacion-msg--ok', 'validacion-msg--error');
+      }
+
+      function flashTotal() {
+        if (!totalEl) return;
+        totalEl.classList.remove('total-kg--flash');
+        // Reinicia la animación aunque el valor no cambie de clase
+        void totalEl.offsetWidth;
+        totalEl.classList.add('total-kg--flash');
+        window.clearTimeout(flashTotal._t);
+        flashTotal._t = window.setTimeout(function () {
+          totalEl.classList.remove('total-kg--flash');
+        }, 550);
+      }
+
+      function setPalletStatusMode(mode) {
+        if (!palletStatusEl) return;
+        palletStatusEl.classList.remove(
+          'pallet-status--empty',
+          'pallet-status--ok',
+          'pallet-status--warn',
+          'pallet-status--error'
+        );
+        palletStatusEl.classList.add('pallet-status--' + mode);
+      }
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text != null) node.textContent = text;
+        return node;
+      }
+
+      function row(label, value, valueClass) {
+        const line = el('div', 'pallet-status__row');
+        line.appendChild(el('span', 'pallet-status__label', label));
+        line.appendChild(el('span', valueClass || 'pallet-status__value', value));
+        return line;
+      }
+
+      function note(text) {
+        return el('p', 'pallet-status__note', text);
+      }
+
+      /** Panel en vivo de estado del pedido. */
+      function updateLivePalletStatus(total) {
+        if (!palletStatusEl) return;
+        palletStatusEl.innerHTML = '';
+        palletStatusEl.appendChild(
+          el('p', 'pallet-status__title', 'Estado del pedido')
+        );
+
+        const validN = getValidPalletCount(total);
+        const palletsCompletos = getPalletsCompletos(total);
+        const palletsCalculados = getPalletsCalculados(total);
+        const faltaInfo = getFaltanParaSiguienteCompleto(total);
+        const leftoverCamaKg = getLeftoverWeightKg();
+        const sobrantesSinPallet = getKgSobrantesSinPallet(total);
+
+        if (total <= 0) {
+          setPalletStatusMode('empty');
+        } else if (validN >= 1 && leftoverCamaKg === 0 && sobrantesSinPallet === 0) {
+          setPalletStatusMode('ok');
+        } else {
+          setPalletStatusMode('warn');
+        }
+
+        const list = el('ul', 'pallet-status__list');
+
+        function addItem(label, value, extraClass) {
+          const li = el(
+            'li',
+            'pallet-status__item' + (extraClass ? ' ' + extraClass : '')
+          );
+          li.appendChild(el('span', 'pallet-status__bullet', '•'));
+          const text = el('span', 'pallet-status__item-text');
+          text.appendChild(el('span', 'pallet-status__item-label', label + ' '));
+          text.appendChild(el('span', 'pallet-status__item-value', value));
+          li.appendChild(text);
+          list.appendChild(li);
+        }
+
+        addItem('Pallets calculados:', String(palletsCalculados));
+        addItem('Peso actual:', formatKg(total) + ' kg');
+        addItem(
+          'Peso de sobrantes sin cama:',
+          formatKg(leftoverCamaKg) + ' kg',
+          leftoverCamaKg > 0 ? 'is-warn' : ''
+        );
+        addItem(
+          'kg sobrantes sin pallet:',
+          formatKg(sobrantesSinPallet) + ' kg',
+          sobrantesSinPallet > 0 ? 'is-warn' : ''
+        );
+
+        addItem(
+          'Falta para completar ' +
+            faltaInfo.nextN +
+            ' ' +
+            palletWord(faltaInfo.nextN) +
+            ':',
+          formatKg(faltaInfo.faltan) + ' kg',
+          faltaInfo.faltan > 0 ? 'is-warn' : ''
+        );
+
+        palletStatusEl.appendChild(list);
+      }
+
+      function updateTotal() {
+        const total = getTotalKg();
+        const formatted = formatKg(total);
+        const changed = totalEl && totalEl.textContent !== formatted;
+        if (totalEl) {
+          totalEl.textContent = formatted;
+          if (changed) flashTotal();
+        }
+        updateLivePalletStatus(total);
+        clearValidationMessage();
+      }
+
+      /** Cantidad de tarimas para modal / Excel: pallets calculados. */
+      function getPalletsPosibles(total) {
+        return getPalletsCalculados(total);
+      }
+
+      /** Pallets completos para armar camas en Excel (sin el incompleto). */
+      function getPalletsParaCamas(total) {
+        const completos = getPalletsCompletos(total);
+        return completos >= 1 ? completos : 0;
+      }
+
+      function pieceKgToInvKey(pieceKg) {
+        if (pieceKg === 20) return 'bag20';
+        if (pieceKg === 15) return 'bag15';
+        if (pieceKg === 8) return 'bag8';
+        if (pieceKg === 6) return 'bag6';
+        if (pieceKg === 2) return 'box2';
+        if (pieceKg === 1.5) return 'box1_5';
+        if (pieceKg === 3) return 'box3';
+        return null;
+      }
+
+      /** Líneas del pedido con inventario por tipo de cama. */
+      function getDetailedOrderLines() {
+        const lines = [];
+        document.querySelectorAll('.producto-card').forEach(function (card) {
+          const productEl = card.querySelector('.producto-nombre');
+          const product = productEl ? productEl.textContent.trim() : '';
+          card.querySelectorAll('.presentacion').forEach(function (row) {
+            const input = row.querySelector('input[type="number"]');
+            if (!input) return;
+            const qty = parseInt(input.value, 10);
+            if (isNaN(qty) || qty <= 0) return;
+            const pieceKg = parseFloat(input.dataset.pieceKg);
+            const unitKg = parseFloat(input.dataset.kg);
+            const invKey = pieceKgToInvKey(pieceKg);
+            if (!invKey) return;
+            const presentacionEl = row.querySelector('.presentacion-peso');
+            const presentacion = presentacionEl
+              ? presentacionEl.textContent.trim()
+              : '';
+            lines.push({
+              product: product,
+              presentacion: presentacion,
+              qty: qty,
+              remaining: qty,
+              pieceKg: pieceKg,
+              unitKg: unitKg,
+              invKey: invKey,
+            });
+          });
+        });
+        return lines;
+      }
+
+      /**
+       * Toma `need` unidades del pool de un invKey, priorizando productos.
+       * Devuelve { product, presentacion, qty }[].
+       */
+      function takeFromPool(poolByKey, invKey, need) {
+        const taken = [];
+        let left = need;
+        const pool = poolByKey[invKey] || [];
+        for (let i = 0; i < pool.length && left > 0; i++) {
+          const line = pool[i];
+          if (line.remaining <= 0) continue;
+          const use = Math.min(line.remaining, left);
+          line.remaining -= use;
+          left -= use;
+          taken.push({
+            product: line.product,
+            presentacion: line.presentacion,
+            qty: use,
+          });
+        }
+        return { items: taken, shortfall: left };
+      }
+
+      /**
+       * Arma camas (y medias) conservando qué productos van en cada una.
+       * Cada cama: { id, half, height, items: [{product, presentacion, qty}] }
+       * leftovers: unidades que no formaron cama/media.
+       */
+      function buildBedsWithProducts() {
+        const lines = getDetailedOrderLines();
+        const poolByKey = {
+          bag20: [],
+          bag15: [],
+          bag8: [],
+          bag6: [],
+          box2: [],
+          box1_5: [],
+          box3: [],
+        };
+        lines.forEach(function (line) {
+          poolByKey[line.invKey].push(line);
+        });
+
+        const beds = [];
+
+        BED_TYPES.forEach(function (def) {
+          const pool = poolByKey[def.invKey];
+          let available = pool.reduce(function (s, l) {
+            return s + l.remaining;
+          }, 0);
+
+          while (available >= def.fullQty) {
+            const result = takeFromPool(poolByKey, def.invKey, def.fullQty);
+            if (result.shortfall > 0) break;
+            beds.push({
+              id: def.id,
+              half: false,
+              height: def.height,
+              items: result.items,
+            });
+            available -= def.fullQty;
+          }
+
+          if (def.halfQty > 0 && available >= def.halfQty) {
+            const result = takeFromPool(poolByKey, def.invKey, def.halfQty);
+            if (result.shortfall === 0) {
+              beds.push({
+                id: def.id,
+                half: true,
+                height: def.height,
+                items: result.items,
+              });
+            }
+          }
+        });
+
+        // Orden alfabético de tipo de cama (A…G); medias del mismo tipo después de completas
+        beds.sort(function (a, b) {
+          if (a.id !== b.id) return a.id.localeCompare(b.id);
+          return (a.half ? 1 : 0) - (b.half ? 1 : 0);
+        });
+
+        // Sobrantes sin cama (unidades que no entraron en cama/media)
+        const leftoverItems = [];
+        Object.keys(poolByKey).forEach(function (key) {
+          poolByKey[key].forEach(function (line) {
+            if (line.remaining > 0) {
+              leftoverItems.push({
+                product: line.product,
+                presentacion: line.presentacion,
+                qty: line.remaining,
+                unitKg: line.unitKg,
+              });
+            }
+          });
+        });
+
+        return { beds: beds, leftoverItems: leftoverItems };
+      }
+
+      /**
+       * Fusiona filas del mismo producto + presentación (solo dentro de una cama).
+       */
+      function mergeBedItems(items) {
+        const merged = {};
+        const order = [];
+        items.forEach(function (item) {
+          const key = item.product + '\0' + item.presentacion;
+          if (!merged[key]) {
+            merged[key] = {
+              product: item.product,
+              presentacion: item.presentacion,
+              qty: 0,
+            };
+            order.push(key);
+          }
+          merged[key].qty += item.qty;
+        });
+        return order.map(function (key) {
+          return merged[key];
+        });
+      }
+
+      /**
+       * Reparte camas en tarimas (pallets) de forma equilibrada por altura.
+       * Dentro de cada tarima, reordena camas A→G.
+       * Si hay kg sobrantes sin pallet (o unidades sin cama), se agrega
+       * "Tarima de sobrantes (sin pallet completo)".
+       */
+      function buildTarimasForExport() {
+        const total = getTotalKg();
+        // Camas solo en pallets completos; el incompleto va a tarima de sobrantes
+        const palletsCompletos = getPalletsCompletos(total);
+        const sobrantesSinPallet = getKgSobrantesSinPallet(total);
+        const built = buildBedsWithProducts();
+        const beds = built.beds;
+        const leftoverItems = built.leftoverItems || [];
+
+        const n = palletsCompletos >= 1 ? palletsCompletos : 0;
+
+        const tarimas = [];
+        let sobrantesItems = leftoverItems.slice();
+
+        if (beds.length > 0 && n >= 1) {
+          // Camas en pallets completos numerados
+          distributeBedsToPallets(beds, n).forEach(function (p, idx) {
+            const sortedBeds = p.beds.slice().sort(function (a, b) {
+              if (a.id !== b.id) return a.id.localeCompare(b.id);
+              return (a.half ? 1 : 0) - (b.half ? 1 : 0);
+            });
+            tarimas.push({
+              title: 'Tarima ' + (idx + 1),
+              beds: sortedBeds,
+              isSobrantes: false,
+            });
+          });
+        } else if (beds.length > 0 && n === 0) {
+          // No hay pallets completos: todo va a tarima de sobrantes (por cama A→G)
+          // se maneja abajo con beds en isSobrantes
+        }
+
+        // Tarima de sobrantes (pallet incompleto con flete completo)
+        if (leftoverItems.length > 0 || sobrantesSinPallet > 0 || (beds.length > 0 && n === 0)) {
+          tarimas.push({
+            title: 'Tarima de sobrantes (sin pallet completo)',
+            beds: n === 0 ? beds : [],
+            isSobrantes: true,
+            leftoverItems: sobrantesItems,
+          });
+        }
+
+        return {
+          tarimas: tarimas,
+          totalKg: total,
+          tarimasCount: tarimas.filter(function (t) {
+            return !t.isSobrantes;
+          }).length,
+          sobrantesSinPallet: sobrantesSinPallet,
+        };
+      }
+
+      function openModal() {
+        const total = getTotalKg();
+        const tarimasCount = getPalletsPosibles(total);
+        const sobrantesSinPallet = getKgSobrantesSinPallet(total);
+
+        if (modalTotalEl) {
+          modalTotalEl.textContent = formatKg(total);
+        }
+        if (modalTarimasEl) {
+          modalTarimasEl.textContent = formatNumber(tarimasCount);
+        }
+        if (modalSobrantesEl) {
+          modalSobrantesEl.textContent = formatKg(sobrantesSinPallet);
+        }
+        if (modalAlertaSobrantes) {
+          modalAlertaSobrantes.hidden = sobrantesSinPallet <= 0;
+        }
+
+        if (!modal) return;
+        modal.hidden = false;
+        document.body.classList.add('modal-open');
+        if (btnModalSi) btnModalSi.focus();
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.hidden = true;
+        document.body.classList.remove('modal-open');
+      }
+
+      function fechaArchivo() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return yyyy + '-' + mm + '-' + dd;
+      }
+
+      function downloadExcelTarimas() {
+        if (typeof XLSX === 'undefined') {
+          alert(
+            'No se pudo cargar la librería de Excel. Revisa tu conexión a internet e inténtalo de nuevo.'
+          );
+          return;
+        }
+
+        const data = buildTarimasForExport();
+        const rows = [];
+
+        if (!data.tarimas.length) {
+          rows.push(['Sin productos armables en el pedido actual']);
+          rows.push([]);
+          rows.push(['Total de kilogramos', data.totalKg]);
+        } else {
+          data.tarimas.forEach(function (tarima) {
+            // Título de tarima
+            rows.push([tarima.title]);
+            rows.push(['Producto', 'Presentación', 'Cantidad de piezas']);
+
+            if (tarima.isSobrantes) {
+              // Camas enteras si no hubo pallets completos (orden A→G)
+              if (tarima.beds && tarima.beds.length > 0) {
+                tarima.beds.forEach(function (bed, bedIdx) {
+                  mergeBedItems(bed.items || []).forEach(function (m) {
+                    rows.push([m.product, m.presentacion, m.qty]);
+                  });
+                  if (bedIdx < tarima.beds.length - 1) {
+                    rows.push([]);
+                  }
+                });
+              }
+              // Unidades sueltas sin cama
+              const items = tarima.leftoverItems || [];
+              if (items.length > 0) {
+                if (tarima.beds && tarima.beds.length > 0) rows.push([]);
+                mergeBedItems(items).forEach(function (m) {
+                  rows.push([m.product, m.presentacion, m.qty]);
+                });
+              }
+            } else {
+              // Por cada cama en orden A→G: productos de ESA cama (sin mezclar)
+              tarima.beds.forEach(function (bed, bedIdx) {
+                mergeBedItems(bed.items || []).forEach(function (m) {
+                  rows.push([m.product, m.presentacion, m.qty]);
+                });
+                // Separador visual entre camas (sin escribir el nombre A–G)
+                if (bedIdx < tarima.beds.length - 1) {
+                  rows.push([]);
+                }
+              });
+            }
+
+            rows.push([]); // separador entre tarimas
+          });
+
+          rows.push(['Total de kilogramos', data.totalKg]);
+        }
+
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        ws['!cols'] = [{ wch: 40 }, { wch: 28 }, { wch: 20 }];
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Tarimas');
+        XLSX.writeFile(
+          wb,
+          'Pedido_KANTEK_Tarimas_' + fechaArchivo() + '.xlsx'
+        );
+      }
+
+      function confirmCargarCarrito() {
+        downloadExcelTarimas();
+        closeModal();
+      }
+
+      function adjustQty(input, delta) {
+        const current = normalizeValue(input);
+        const next = Math.max(0, current + delta);
+        input.value = next;
+        updateTotal();
+      }
+
+      function clearAll() {
+        inputs.forEach(function (input) {
+          input.value = 0;
+        });
+        updateTotal();
+      }
+
+      inputs.forEach(function (input) {
+        input.addEventListener('input', updateTotal);
+        input.addEventListener('change', function () {
+          normalizeValue(input);
+          updateTotal();
+        });
+      });
+
+      document.querySelectorAll('.presentacion').forEach(function (row) {
+        const input = row.querySelector('input[type="number"]');
+        const minus = row.querySelector('.btn-minus');
+        const plus = row.querySelector('.btn-plus');
+        if (!input || !minus || !plus) return;
+
+        minus.addEventListener('click', function () {
+          adjustQty(input, -1);
+        });
+        plus.addEventListener('click', function () {
+          adjustQty(input, 1);
+        });
+      });
+
+      if (btnBorrar) {
+        btnBorrar.addEventListener('click', clearAll);
+      }
+
+      if (btnCargar) {
+        btnCargar.addEventListener('click', openModal);
+      }
+
+      if (btnModalSi) {
+        btnModalSi.addEventListener('click', confirmCargarCarrito);
+      }
+
+      if (modal) {
+        modal.querySelectorAll('[data-modal-close]').forEach(function (el) {
+          el.addEventListener('click', closeModal);
+        });
+      }
+
+      /** Orden de Tab: valores → Cargar carrito → Borrar todo */
+      function getTabStops() {
+        const stops = Array.prototype.slice.call(inputs);
+        if (btnCargar) stops.push(btnCargar);
+        if (btnBorrar) stops.push(btnBorrar);
+        return stops;
+      }
+
+      function focusTabStop(el) {
+        if (!el) return;
+        el.focus();
+        if (el.tagName === 'INPUT' && typeof el.select === 'function') {
+          el.select();
+        }
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal && !modal.hidden) {
+          closeModal();
+          return;
+        }
+
+        if (e.key !== 'Tab') return;
+
+        // Con el modal abierto, no interferir (queda el flujo del diálogo)
+        if (modal && !modal.hidden) return;
+
+        const stops = getTabStops();
+        if (!stops.length) return;
+
+        const active = document.activeElement;
+        let idx = stops.indexOf(active);
+
+        // Si el foco quedó en un botón +/- (p. ej. clic), saltar al input del renglón
+        if (
+          idx === -1 &&
+          active &&
+          active.classList &&
+          active.classList.contains('btn-qty')
+        ) {
+          const row = active.closest('.qty-controls');
+          const input = row ? row.querySelector('input[type="number"]') : null;
+          idx = input ? stops.indexOf(input) : -1;
+          if (idx === -1) {
+            e.preventDefault();
+            focusTabStop(stops[0]);
+            return;
+          }
+        }
+
+        if (idx === -1) {
+          // Primer Tab desde fuera del ciclo → primer valor
+          e.preventDefault();
+          focusTabStop(e.shiftKey ? stops[stops.length - 1] : stops[0]);
+          return;
+        }
+
+        e.preventDefault();
+        const nextIdx = e.shiftKey
+          ? (idx - 1 + stops.length) % stops.length
+          : (idx + 1) % stops.length;
+        focusTabStop(stops[nextIdx]);
+      });
+
+      updateTotal();
+    })();
+  </script>
 </body>
 </html>
