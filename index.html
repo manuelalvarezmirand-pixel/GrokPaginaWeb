@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="configurador">
-  <div class="page-bg" aria-hidden="true"></div>
-
   <header class="top-bar">
     <img
       class="top-bar-logo"
@@ -19,31 +17,6 @@
     >
   </header>
 
-  <aside class="sidebar" aria-label="Resumen y acciones del pedido">
-    <div class="sidebar-section sidebar-total-block">
-      <span class="resumen-label">Total del pedido</span>
-      <span class="resumen-valor">
-        <span class="total-kg-slot"><span id="total-kg">0</span></span>
-        <span class="total-kg-unit">kg</span>
-      </span>
-      <span class="resumen-limites">Mínimo 700 kg · Máximo 900 kg por pallet</span>
-    </div>
-
-    <div
-      id="pallet-status"
-      class="pallet-status pallet-status--empty"
-      role="status"
-      aria-live="polite"
-    >
-      <p class="pallet-status__title">Estado del pedido</p>
-      <p class="pallet-status__body">Agrega productos para ver el armado por pallets.</p>
-    </div>
-
-    <div class="sidebar-actions">
-      <button type="button" class="btn-cargar" id="btn-cargar">CARGAR CARRITO 🛒</button>
-      <button type="button" class="btn-borrar" id="btn-borrar">BORRAR TODO</button>
-    </div>
-  </aside>
 
   <div
     id="validacion-msg"
@@ -53,7 +26,8 @@
     hidden
   ></div>
 
-  <main class="config-page">
+  <div class="page-shell">
+    <main class="config-page">
     <div class="page-intro">
       <h1 class="config-title">Configurador de Pedidos</h1>
       <p class="config-subtitle">Armado de pedidos por pallet</p>
@@ -66,7 +40,10 @@
         <h2 class="producto-nombre">KANTEK Cachorro</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="2 kg (8 pzs)">
+              <span class="presentacion-peso__kg">2 kg</span>
+              <span class="presentacion-peso__pzs">(8 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="cachorro" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Cachorro 2 kg">
@@ -98,7 +75,10 @@
         <h2 class="producto-nombre">KANTEK Adulto</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="2 kg (8 pzs)">
+              <span class="presentacion-peso__kg">2 kg</span>
+              <span class="presentacion-peso__pzs">(8 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="adulto" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Adulto 2 kg">
@@ -130,7 +110,10 @@
         <h2 class="producto-nombre">KANTEK Veteranos</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="2 kg (8 pzs)">
+              <span class="presentacion-peso__kg">2 kg</span>
+              <span class="presentacion-peso__pzs">(8 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="veteranos" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Veteranos 2 kg">
@@ -154,7 +137,10 @@
         <h2 class="producto-nombre">KANTEK Adulto Razas Pequeñas</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="2 kg (8 pzs)">
+              <span class="presentacion-peso__kg">2 kg</span>
+              <span class="presentacion-peso__pzs">(8 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="razas-pequenas" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Adulto Razas Pequeñas 2 kg">
@@ -178,7 +164,10 @@
         <h2 class="producto-nombre">KANTEK Activo</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 8 pzs de 2 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="2 kg (8 pzs)">
+              <span class="presentacion-peso__kg">2 kg</span>
+              <span class="presentacion-peso__pzs">(8 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="activo" data-kg="16" data-piece-kg="2" aria-label="Cantidad de cajas KANTEK Activo 2 kg">
@@ -202,7 +191,10 @@
         <h2 class="producto-nombre">KANTEK Felinos</h2>
         <div class="presentaciones">
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 12 pzs de 1.5 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="1.5 kg (12 pzs)">
+              <span class="presentacion-peso__kg">1.5 kg</span>
+              <span class="presentacion-peso__pzs">(12 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="felinos" data-kg="18" data-piece-kg="1.5" aria-label="Cantidad de cajas KANTEK Felinos 1.5 kg">
@@ -210,7 +202,10 @@
             </div>
           </div>
           <div class="presentacion">
-            <span class="presentacion-peso">Caja de 6 pzs de 3 kg</span>
+            <span class="presentacion-peso presentacion-peso--caja" data-label="3 kg (6 pzs)">
+              <span class="presentacion-peso__kg">3 kg</span>
+              <span class="presentacion-peso__pzs">(6 pzs)</span>
+            </span>
             <div class="qty-controls">
               <button type="button" class="btn-qty btn-minus" tabindex="-1" aria-label="Restar cantidad">−</button>
               <input type="number" min="0" step="1" value="0" data-product="felinos" data-kg="18" data-piece-kg="3" aria-label="Cantidad de cajas KANTEK Felinos 3 kg">
@@ -229,6 +224,50 @@
       </article>
     </section>
   </main>
+
+    <aside class="sidebar" aria-label="Resumen y acciones del pedido">
+    <div class="sidebar-section sidebar-total-block">
+      <span class="resumen-label">Total del pedido</span>
+      <span class="resumen-valor">
+        <span class="total-kg-slot"><span id="total-kg">0</span></span>
+        <span class="total-kg-unit">kg</span>
+      </span>
+      <span class="resumen-limites">Mínimo 700 kg · Máximo 900 kg por pallet</span>
+    </div>
+
+    <div
+      id="pallet-status"
+      class="pallet-status pallet-status--empty is-collapsed"
+      role="status"
+      aria-live="polite"
+    >
+      <button
+        type="button"
+        class="pallet-status__toggle"
+        id="pallet-status-toggle"
+        aria-expanded="false"
+        aria-controls="pallet-status-panel"
+      >
+        <span class="pallet-status__title">Estado del pedido</span>
+        <span class="pallet-status__chevron" aria-hidden="true"></span>
+      </button>
+      <div
+        id="pallet-status-panel"
+        class="pallet-status__panel"
+        role="region"
+        aria-labelledby="pallet-status-toggle"
+      >
+        <p class="pallet-status__body">Agrega productos para ver el armado por pallets.</p>
+      </div>
+    </div>
+
+    <div class="sidebar-actions">
+      <button type="button" class="btn-cargar" id="btn-cargar">CARGAR CARRITO 🛒</button>
+      <button type="button" class="btn-borrar" id="btn-borrar">BORRAR TODO</button>
+    </div>
+    </aside>
+  </div>
+
 
   <!-- Modal cargar carrito -->
   <div
@@ -706,7 +745,10 @@
             const pieceKg = parseFloat(input.dataset.pieceKg);
             const presentacionEl = row.querySelector('.presentacion-peso');
             const presentacion = presentacionEl
-              ? presentacionEl.textContent.trim()
+              ? (
+                  presentacionEl.getAttribute('data-label') ||
+                  presentacionEl.textContent.replace(/\s+/g, ' ').trim()
+                )
               : '';
             const lineKg = Math.round(qty * unitKg * 10) / 10;
             lines.push({
@@ -776,10 +818,10 @@
       /** Panel en vivo de estado del pedido. */
       function updateLivePalletStatus(total) {
         if (!palletStatusEl) return;
-        palletStatusEl.innerHTML = '';
-        palletStatusEl.appendChild(
-          el('p', 'pallet-status__title', 'Estado del pedido')
-        );
+
+        const panel = palletStatusEl.querySelector('.pallet-status__panel');
+        if (!panel) return;
+        panel.innerHTML = '';
 
         const validN = getValidPalletCount(total);
         const palletsCompletos = getPalletsCompletos(total);
@@ -834,7 +876,40 @@
           faltaInfo.faltan > 0 ? 'is-warn' : ''
         );
 
-        palletStatusEl.appendChild(list);
+        panel.appendChild(list);
+      }
+
+      function setPalletStatusExpanded(expanded) {
+        if (!palletStatusEl) return;
+        const toggle = document.getElementById('pallet-status-toggle');
+        palletStatusEl.classList.toggle('is-collapsed', !expanded);
+        if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      }
+
+      function initPalletStatusToggle() {
+        const toggle = document.getElementById('pallet-status-toggle');
+        if (!toggle || !palletStatusEl) return;
+        const narrowMq = window.matchMedia('(max-width: 800px)');
+        toggle.addEventListener('click', function () {
+          if (!narrowMq.matches) return;
+          const isCollapsed = palletStatusEl.classList.contains('is-collapsed');
+          setPalletStatusExpanded(isCollapsed);
+        });
+        // Al volver a escritorio, el panel debe verse completo (sin depender del estado móvil)
+        function onViewportChange() {
+          if (!narrowMq.matches) {
+            setPalletStatusExpanded(true);
+            // En móvil por defecto se colapsa; al reentrar en angosto se re-colapsa
+          } else {
+            setPalletStatusExpanded(false);
+          }
+        }
+        if (typeof narrowMq.addEventListener === 'function') {
+          narrowMq.addEventListener('change', onViewportChange);
+        } else if (typeof narrowMq.addListener === 'function') {
+          narrowMq.addListener(onViewportChange);
+        }
+        onViewportChange();
       }
 
       function updateTotal() {
@@ -888,7 +963,10 @@
             if (!invKey) return;
             const presentacionEl = row.querySelector('.presentacion-peso');
             const presentacion = presentacionEl
-              ? presentacionEl.textContent.trim()
+              ? (
+                  presentacionEl.getAttribute('data-label') ||
+                  presentacionEl.textContent.replace(/\s+/g, ' ').trim()
+                )
               : '';
             lines.push({
               product: product,
@@ -1213,6 +1291,31 @@
         updateTotal();
       }
 
+      var BTN_BORRAR_LABEL = 'BORRAR TODO';
+      var BTN_BORRAR_CONFIRM = '¿SEGURO QUE BORRAR?';
+      var borrarConfirming = false;
+
+      function resetBorrarConfirm() {
+        borrarConfirming = false;
+        if (!btnBorrar) return;
+        btnBorrar.textContent = BTN_BORRAR_LABEL;
+        btnBorrar.classList.remove('btn-borrar--confirm');
+        btnBorrar.setAttribute('aria-label', BTN_BORRAR_LABEL);
+      }
+
+      function onBorrarClick() {
+        if (!btnBorrar) return;
+        if (!borrarConfirming) {
+          borrarConfirming = true;
+          btnBorrar.textContent = BTN_BORRAR_CONFIRM;
+          btnBorrar.classList.add('btn-borrar--confirm');
+          btnBorrar.setAttribute('aria-label', BTN_BORRAR_CONFIRM);
+          return;
+        }
+        clearAll();
+        resetBorrarConfirm();
+      }
+
       inputs.forEach(function (input) {
         input.addEventListener('input', updateTotal);
         input.addEventListener('change', function () {
@@ -1235,9 +1338,18 @@
         });
       });
 
+      initPalletStatusToggle();
+
       if (btnBorrar) {
-        btnBorrar.addEventListener('click', clearAll);
+        btnBorrar.addEventListener('click', onBorrarClick);
       }
+
+      // Si hay confirmación pendiente y el clic es fuera del botón rojo, se cancela
+      document.addEventListener('click', function (e) {
+        if (!borrarConfirming || !btnBorrar) return;
+        if (btnBorrar.contains(e.target)) return;
+        resetBorrarConfirm();
+      });
 
       if (btnCargar) {
         btnCargar.addEventListener('click', openModal);
