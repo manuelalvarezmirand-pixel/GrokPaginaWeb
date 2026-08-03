@@ -191,7 +191,7 @@
   --radius-sm: 10px;
   --transition: 0.2s ease;
   --font: "Campton", system-ui, sans-serif;
-  --sidebar-width: 20rem;
+  --sidebar-width: 22.5rem;
 }
 
 html {
@@ -398,7 +398,7 @@ body.configurador {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  padding: 0.7rem 0.7rem;
+  padding: 0.7rem 0.75rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
@@ -606,20 +606,36 @@ body.configurador {
   padding: 0.35rem 0.15rem 0.1rem 0;
 }
 
+/*
+ * Cada punto: viñeta + texto en la misma fila (grid).
+ * Evita que flex-wrap separe el texto debajo de la viñeta.
+ */
 .pallet-status__item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
+  display: grid;
+  grid-template-columns: 0.75rem minmax(0, 1fr);
+  column-gap: 0.35rem;
+  row-gap: 0.08rem;
+  align-items: baseline;
   font-family: var(--font);
-  font-size: 0.88rem;
-  line-height: 1.35;
+  font-size: 0.8rem;
+  line-height: 1.25;
   color: var(--text-on-dark);
 }
 
 .pallet-status__bullet {
+  grid-column: 1;
+  grid-row: 1;
   color: var(--accent);
   font-weight: 800;
-  flex-shrink: 0;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.pallet-status__item-text {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .pallet-status__item-label {
@@ -633,8 +649,20 @@ body.configurador {
   color: var(--text-on-dark);
 }
 
-.pallet-status__item.is-warn .pallet-status__item-value {
+.pallet-status__item.is-warn .pallet-status__item-value,
+.pallet-status__subitem.is-warn .pallet-status__item-value {
   color: #ffb84d;
+}
+
+/* Pallets parciales > 0: rojo claro legible (alerta de tarima incompleta) */
+.pallet-status__subitem.is-partial .pallet-status__item-value {
+  color: #ff8a80;
+  font-weight: 800;
+}
+
+.pallet-status--ok .pallet-status__subitem.is-partial .pallet-status__item-value,
+.pallet-status--warn .pallet-status__subitem.is-partial .pallet-status__item-value {
+  color: #ff8a80;
 }
 
 .pallet-status__item.is-ok .pallet-status__item-value {
@@ -643,6 +671,67 @@ body.configurador {
 
 .pallet-status--ok .pallet-status__item-value {
   color: #d8ffe8;
+}
+
+/* Grupo compacto: Pallets calculados + De los cuales + subpuntos */
+.pallet-status__item--pallets-group {
+  row-gap: 0.04rem;
+  line-height: 1.15;
+}
+
+.pallet-status__item--pallets-group > .pallet-status__item-text {
+  line-height: 1.15;
+}
+
+/* Subpuntos bajo "Pallets calculados" (columna del texto, bajo la 1ª línea) */
+.pallet-status__de-los-cuales {
+  grid-column: 2;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-muted-on-dark);
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.pallet-status__sublist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.04rem;
+  margin: 0;
+  padding: 0;
+  grid-column: 2;
+}
+
+.pallet-status__subitem {
+  display: grid;
+  grid-template-columns: 0.7rem minmax(0, 1fr);
+  column-gap: 0.3rem;
+  align-items: baseline;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  line-height: 1.15;
+  color: var(--text-on-dark);
+}
+
+.pallet-status__subitem .pallet-status__item-text {
+  grid-column: 2;
+  grid-row: 1;
+  white-space: nowrap;
+}
+
+.pallet-status__subbullet {
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--accent);
+  font-weight: 700;
+  opacity: 0.85;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .pallet-status__hint {
@@ -1368,11 +1457,19 @@ body.modal-open {
 
 @media (max-width: 1100px) {
   :root {
-    --sidebar-width: 17.5rem;
+    --sidebar-width: 20.5rem;
   }
 
   .resumen-valor {
     font-size: 1.7rem;
+  }
+
+  .pallet-status__item {
+    font-size: 0.78rem;
+  }
+
+  .pallet-status__subitem {
+    font-size: 0.74rem;
   }
 }
 

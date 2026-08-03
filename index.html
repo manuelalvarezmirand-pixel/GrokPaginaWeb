@@ -892,6 +892,10 @@
         const validN = getValidPalletCount(total);
         const palletsCompletos = getPalletsCompletos(total);
         const palletsCalculados = getPalletsCalculados(total);
+        const palletsParciales = Math.max(
+          0,
+          palletsCalculados - palletsCompletos
+        );
         const faltaInfo = getFaltanParaSiguienteCompleto(total);
         const leftoverCamaKg = getLeftoverWeightKg();
         const sobrantesSinPallet = getKgSobrantesSinPallet(total);
@@ -917,19 +921,47 @@
           text.appendChild(el('span', 'pallet-status__item-value', value));
           li.appendChild(text);
           list.appendChild(li);
+          return li;
         }
 
-        addItem('Pallets calculados:', String(palletsCalculados));
-        addItem('Peso actual:', formatKg(total) + ' kg');
+        function addSubItem(parentLi, label, value, extraClass) {
+          let sub = parentLi.querySelector('.pallet-status__sublist');
+          if (!sub) {
+            sub = el('ul', 'pallet-status__sublist');
+            parentLi.appendChild(sub);
+          }
+          const li = el(
+            'li',
+            'pallet-status__subitem' + (extraClass ? ' ' + extraClass : '')
+          );
+          li.appendChild(el('span', 'pallet-status__subbullet', '–'));
+          const text = el('span', 'pallet-status__item-text');
+          text.appendChild(el('span', 'pallet-status__item-label', label + ' '));
+          text.appendChild(el('span', 'pallet-status__item-value', value));
+          li.appendChild(text);
+          sub.appendChild(li);
+        }
+
+        const palletsLi = addItem(
+          'Pallets calculados:',
+          String(palletsCalculados)
+        );
+        palletsLi.classList.add('pallet-status__item--pallets-group');
+        // "De los cuales" como contexto visual de los subpuntos
+        const deLosCuales = el('div', 'pallet-status__de-los-cuales', 'De los cuales:');
+        palletsLi.appendChild(deLosCuales);
+        addSubItem(palletsLi, 'Pallets completos:', String(palletsCompletos));
+        addSubItem(
+          palletsLi,
+          'Pallets parciales:',
+          String(palletsParciales),
+          palletsParciales > 0 ? 'is-partial' : ''
+        );
+
         addItem(
-          'Peso de sobrantes sin cama:',
+          'Peso sobrante sin cama:',
           formatKg(leftoverCamaKg) + ' kg',
           leftoverCamaKg > 0 ? 'is-warn' : ''
-        );
-        addItem(
-          'kg sobrantes sin pallet:',
-          formatKg(sobrantesSinPallet) + ' kg',
-          sobrantesSinPallet > 0 ? 'is-warn' : ''
         );
 
         addItem(
@@ -1284,14 +1316,141 @@
         });
       }
 
+      /**
+       * Peso de una cama (suma de sus productos).
+       */
+      function bedWeightKg(bed) {
+        return bedGroupKg(bed);
+      }
+
+      /**
+       * Reparte camas por PESO (no solo por altura).
+       * - Llena hasta `nPallets` tarimas sin superar `maxKg` c/u.
+       * - Prioriza la tarima más ligera que aún quepa la cama.
+       * - Camas que no caben en ninguna → overflowBeds (van a sobrantes o se recolocan).
+       * Cada cama se mantiene intacta (no se parte entre tarimas).
+       */
+      function distributeBedsByWeightKg(beds, nPallets, maxKg) {
+        const n = Math.max(0, nPallets || 0);
+        const cap = maxKg != null ? maxKg : MAX_PALLET_KG;
+        const sorted = (beds || []).slice().sort(function (a, b) {
+          const dw = bedWeightKg(b) - bedWeightKg(a);
+          if (Math.abs(dw) > 1e-9) return dw;
+          return (b.height || 0) - (a.height || 0);
+        });
+
+        const pallets = [];
+        for (let i = 0; i < n; i++) {
+          pallets.push({
+            beds: [],
+            totalKg: 0,
+            stackM: 0,
+            totalM: TARIMA_M,
+          });
+        }
+
+        const overflowBeds = [];
+
+        sorted.forEach(function (bed) {
+          const w = bedWeightKg(bed);
+          if (n < 1) {
+            overflowBeds.push(bed);
+            return;
+          }
+
+          let best = -1;
+          for (let p = 0; p < pallets.length; p++) {
+            if (pallets[p].totalKg + w <= cap + 1e-9) {
+              if (best < 0 || pallets[p].totalKg < pallets[best].totalKg) {
+                best = p;
+              }
+            }
+          }
+
+          if (best >= 0) {
+            pallets[best].beds.push(bed);
+            pallets[best].totalKg = roundKg(pallets[best].totalKg + w);
+            pallets[best].stackM = roundMeters(
+              pallets[best].stackM + (bed.height || 0)
+            );
+            pallets[best].totalM = roundMeters(
+              pallets[best].stackM + TARIMA_M
+            );
+          } else {
+            overflowBeds.push(bed);
+          }
+        });
+
+        return { pallets: pallets, overflowBeds: overflowBeds };
+      }
+
+      /**
+       * Coloca piezas sueltas (sin cama completa) en tarimas numeradas
+       * sin superar maxKg. Parte lotes si hace falta. Devuelve lo que no cupo.
+       */
+      function placeLooseItemsOnTarimas(tarimas, looseItems, maxKg) {
+        const cap = maxKg != null ? maxKg : MAX_PALLET_KG;
+        const remaining = [];
+
+        toLooseItems(looseItems).forEach(function (item) {
+          let left = item.piezas;
+          const unit = item.unitKg || 0;
+
+          while (left > 0) {
+            let best = -1;
+            for (let i = 0; i < tarimas.length; i++) {
+              const t = tarimas[i];
+              if (t.isSobrantes) continue;
+              const room = cap - (t.totalKg || 0);
+              const canFit =
+                unit <= 0 ? left : Math.floor((room + 1e-9) / unit);
+              if (canFit >= 1) {
+                if (best < 0 || t.totalKg < tarimas[best].totalKg) best = i;
+              }
+            }
+
+            if (best < 0) {
+              remaining.push({
+                product: item.product,
+                presentacion: item.presentacion,
+                piezas: left,
+                unitKg: unit,
+                kg: roundKg(left * unit),
+              });
+              break;
+            }
+
+            const room = cap - (tarimas[best].totalKg || 0);
+            let take =
+              unit <= 0 ? left : Math.min(left, Math.floor((room + 1e-9) / unit));
+            if (take < 1) take = left;
+
+            tarimas[best].looseItems = tarimas[best].looseItems || [];
+            tarimas[best].looseItems.push({
+              product: item.product,
+              presentacion: item.presentacion,
+              piezas: take,
+              unitKg: unit,
+              kg: roundKg(take * unit),
+            });
+            tarimas[best].totalKg = tarimaTotalKg(tarimas[best]);
+            left -= take;
+          }
+        });
+
+        return remaining;
+      }
+
       /*
        * IMPORTANTE - REGLA CRÍTICA DE TARIMAS:
-       * El Excel NUNCA debe crear una "Tarima de sobrantes" si el valor de "kg sobrantes sin pallet" es 0.
-       * El número de tarimas del Excel debe coincidir exactamente con "Pallets calculados" del panel Estado del pedido.
-       * Esta regla tiene prioridad sobre cualquier otra lógica de empaquetado.
+       * 1. Ninguna tarima numerada puede superar MAX_PALLET_KG (900 kg).
+       * 2. El número de tarimas del Excel = "Pallets calculados" del panel.
+       * 3. "Tarima de sobrantes" SOLO si "kg sobrantes sin pallet" > 0.
+       * 4. La distribución por peso alinea el Excel con el Estado del pedido:
+       *    pallets completos se llenan hasta 900 kg; el resto va a sobrantes.
+       * 5. Dentro de cada tarima se mantienen las camas separadas (A→G).
        *
        * Detalle: tarimas numeradas + (1 sobrantes solo si kg > 0) = Pallets calculados.
-       * Dentro de cada tarima: camas A→G (sin escribir el nombre de la cama).
        */
       function buildTarimasFromSnapshot(snap) {
         const totalKg = snap.totalKg;
@@ -1300,17 +1459,23 @@
         const beds = (snap.beds || []).slice();
         const leftoverItems = (snap.leftoverItems || []).slice();
 
-        // Pallets numerados = pallets calculados menos 1 si hay sobrantes
+        // Pallets numerados (completos) = pallets calculados menos 1 si hay sobrantes
         const hasSobrantes = sobrantesKg > 0;
         const nNumeradas = hasSobrantes
           ? Math.max(0, palletsCalculados - 1)
-          : palletsCalculados;
+          : Math.max(0, palletsCalculados);
 
         const tarimas = [];
+        let overflowBeds = [];
 
         if (nNumeradas >= 1) {
           if (beds.length > 0) {
-            distributeBedsToPallets(beds, nNumeradas).forEach(function (p, idx) {
+            const packed = distributeBedsByWeightKg(
+              beds,
+              nNumeradas,
+              MAX_PALLET_KG
+            );
+            packed.pallets.forEach(function (p, idx) {
               const tarima = {
                 title: 'Tarima ' + (idx + 1),
                 beds: sortBedsAlpha(p.beds),
@@ -1320,8 +1485,8 @@
               tarima.totalKg = tarimaTotalKg(tarima);
               tarimas.push(tarima);
             });
+            overflowBeds = packed.overflowBeds;
           } else {
-            // Sin camas armables: crear N tarimas vacías (productos irán como loose)
             for (let i = 0; i < nNumeradas; i++) {
               tarimas.push({
                 title: 'Tarima ' + (i + 1),
@@ -1331,42 +1496,73 @@
               });
             }
           }
+
+          // Si no hay sobrantes y quedaron camas sin caber (empaquetado imperfecto),
+          // forzarlas en la tarima más ligera solo como último recurso.
+          // Con sobrantes, las camas overflow van a la tarima de sobrantes.
+          if (!hasSobrantes && overflowBeds.length > 0) {
+            overflowBeds.forEach(function (bed) {
+              let best = 0;
+              for (let i = 1; i < tarimas.length; i++) {
+                if (tarimas[i].totalKg < tarimas[best].totalKg) best = i;
+              }
+              tarimas[best].beds.push(bed);
+              tarimas[best].beds = sortBedsAlpha(tarimas[best].beds);
+              tarimas[best].totalKg = tarimaTotalKg(tarimas[best]);
+            });
+            overflowBeds = [];
+          }
+        } else {
+          // Sin tarimas numeradas: todas las camas son overflow (pedido < 700 kg)
+          overflowBeds = beds.slice();
         }
 
         if (hasSobrantes) {
           // SOLO si el panel reporta kg sobrantes sin pallet > 0
           const tarima = {
             title: 'Tarima de sobrantes (sin pallet completo)',
-            // Si no hay pallets numerados (pedido < 700), todas las camas van aquí
-            beds: nNumeradas === 0 ? sortBedsAlpha(beds) : [],
+            beds: sortBedsAlpha(overflowBeds),
             looseItems: toLooseItems(leftoverItems),
             isSobrantes: true,
           };
           tarima.totalKg = tarimaTotalKg(tarima);
           tarimas.push(tarima);
         } else if (leftoverItems.length > 0 && tarimas.length > 0) {
-          // sobrantes = 0 en el panel → NO crear tarima extra;
-          // piezas sin cama completa se agregan a la última tarima numerada
-          const last = tarimas[tarimas.length - 1];
-          last.looseItems = (last.looseItems || []).concat(
-            toLooseItems(leftoverItems)
+          // sobrantes = 0 → NO crear tarima extra; repartir sueltos sin pasar de 900 kg
+          const stillLeft = placeLooseItemsOnTarimas(
+            tarimas,
+            leftoverItems,
+            MAX_PALLET_KG
           );
-          last.totalKg = tarimaTotalKg(last);
+          if (stillLeft.length > 0) {
+            // Forzar resto en la más ligera (total válido N×700…N×900)
+            const best = tarimas.reduce(function (bi, t, i, arr) {
+              return t.totalKg < arr[bi].totalKg ? i : bi;
+            }, 0);
+            tarimas[best].looseItems = (tarimas[best].looseItems || []).concat(
+              stillLeft
+            );
+            tarimas[best].totalKg = tarimaTotalKg(tarimas[best]);
+          }
         } else if (leftoverItems.length > 0 && tarimas.length === 0) {
-          // Pedido con piezas pero 0 pallets calculados (no debería pasar si total>0)
-          // Sin inventar "sobrantes" si el panel dice 0: una sola Tarima 1
+          // Pedido con piezas pero sin camas; respetar pallets calculados
           if (palletsCalculados >= 1) {
-            tarimas.push({
-              title: 'Tarima 1',
-              beds: [],
-              looseItems: toLooseItems(leftoverItems),
-              isSobrantes: false,
+            for (let i = 0; i < palletsCalculados; i++) {
+              tarimas.push({
+                title: 'Tarima ' + (i + 1),
+                beds: [],
+                looseItems: [],
+                isSobrantes: false,
+              });
+            }
+            placeLooseItemsOnTarimas(tarimas, leftoverItems, MAX_PALLET_KG);
+            // Si aún sobra (solo piezas, sin sobrantes de panel), al más ligero
+            tarimas.forEach(function (t) {
+              t.totalKg = tarimaTotalKg(t);
             });
-            tarimas[0].totalKg = tarimaTotalKg(tarimas[0]);
           }
         }
 
-        // Recalcular totales de tarimas numeradas por si se añadieron loose items
         tarimas.forEach(function (t) {
           t.totalKg = tarimaTotalKg(t);
         });
