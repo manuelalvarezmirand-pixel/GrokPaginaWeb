@@ -319,7 +319,8 @@ body.configurador {
 /* ---------- Contenedor centrado: productos + panel (dos columnas) ---------- */
 
 .page-shell {
-  --producto-card-width: 18.5rem;
+  /* Cajas más anchas: mockup grande + textos + botones sin apretar */
+  --producto-card-width: 26.5rem;
   --productos-gap: 1.35rem;
   --shell-col-gap: 1rem; /* espacio fijo entre productos y panel */
   --productos-block-width: calc(
@@ -713,11 +714,11 @@ body.configurador {
   background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
-  padding: 1.4rem 1.3rem 1.3rem;
+  padding: 1.45rem 1.45rem 1.4rem;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.15rem;
   overflow: hidden;
   color: var(--line-color);
   transition:
@@ -774,36 +775,72 @@ body.configurador {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   line-height: 1.35;
+  text-align: center;
   color: var(--line-color);
   padding-bottom: 0.85rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line-color) 28%, transparent);
 }
 
+/* Cuerpo de la caja: mockup a la izquierda + presentaciones a la derecha */
+.producto-card__body {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1.1rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Contenedor del costal: estira al alto del bloque de presentaciones (tamaño actual) */
+.producto-card__media {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  width: 6.75rem;
+  max-width: 6.75rem;
+  min-width: 6.75rem;
+}
+
+/* El costal llena el alto de la caja de la fórmula */
+.producto-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
 .presentaciones {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  flex: 1;
+  justify-content: center;
+  gap: 0.9rem;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .presentacion {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.65rem;
-  min-height: 2.35rem;
+  gap: 0.85rem;
+  min-height: 2.5rem;
 }
 
 .presentacion-peso {
   font-family: var(--font);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--line-color);
   line-height: 1.3;
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 auto;
+  min-width: 3.75rem;
   text-align: right;
-  opacity: 0.92;
+  opacity: 0.95;
+  white-space: nowrap;
 }
 
 /* Cajas: dos renglones, misma altura que botones +/- */
@@ -812,34 +849,36 @@ body.configurador {
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  height: 2.5rem; /* igual a .qty-controls */
-  gap: 0.05rem;
-  line-height: 1.05;
+  height: 2.6rem; /* igual a .qty-controls */
+  gap: 0.1rem;
+  line-height: 1.1;
+  white-space: normal;
 }
 
 .presentacion-peso__kg {
   display: block;
-  font-size: 0.88rem;
-  font-weight: 600;
-  line-height: 1.1;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .presentacion-peso__pzs {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  line-height: 1.1;
-  opacity: 0.85;
+  line-height: 1.15;
+  opacity: 0.88;
 }
 
 .qty-controls {
-  --qty-input-width: 4.1rem;
+  --qty-input-width: 4.25rem;
   --qty-btn-width: calc(var(--qty-input-width) * 0.75); /* 75% del input */
   display: flex;
   align-items: stretch;
-  gap: 0.3rem;
+  gap: 0.35rem;
+  flex: 0 0 auto;
   flex-shrink: 0;
-  height: 2.5rem;
+  height: 2.6rem;
 }
 
 .btn-qty {
