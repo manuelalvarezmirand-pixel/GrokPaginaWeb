@@ -286,7 +286,36 @@ body {
 body.configurador {
   position: relative;
   min-height: 100vh;
-  background: var(--bg);
+  /*
+   * Fondo moderno en azul marino:
+   * - brillo suave arriba (más abierto)
+   * - color de marca al centro
+   * - azul marino más profundo abajo
+   */
+  background-color: #011b2b;
+  background-image:
+    radial-gradient(
+      ellipse 120% 65% at 50% -5%,
+      rgba(18, 72, 108, 0.55) 0%,
+      rgba(8, 45, 70, 0.22) 42%,
+      transparent 70%
+    ),
+    linear-gradient(
+      168deg,
+      #0a3048 0%,
+      #011b2b 45%,
+      #000d18 78%,
+      #00060e 100%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Asegura que html no “aplaste” el degradado con un color plano */
+html:has(body.configurador) {
+  background-color: #011b2b;
+  min-height: 100%;
 }
 
 /* ---------- Barra superior: solo logo centrado ---------- */
