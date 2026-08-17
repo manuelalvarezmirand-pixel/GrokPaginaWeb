@@ -941,13 +941,13 @@ html:has(body.configurador) {
 
 /* Contenedor del costal: estira al alto del bloque de presentaciones (tamaño actual) */
 .producto-card__media {
-  flex: 0 1 6.75rem;
+  flex: 0 0 auto;
   display: flex;
   align-items: stretch;
   align-self: stretch;
   width: clamp(4.25rem, 28%, 6.75rem);
   max-width: 6.75rem;
-  min-width: 0;
+  min-width: 4.25rem;
 }
 
 /* El costal llena el alto de la caja de la fórmula */
@@ -1160,6 +1160,7 @@ html:has(body.configurador) {
 @container producto (max-width: 24rem) {
   .producto-card__media {
     width: 4.6rem;
+    min-width: 3.35rem;
     max-width: 4.6rem;
   }
 
@@ -1834,20 +1835,44 @@ body.modal-open {
     gap: 0.85rem;
   }
 
-  /* En celular: sin costales, solo nombre + presentaciones */
-  .producto-card__media,
-  .producto-card__img {
-    display: none !important;
-  }
-
+  /* En angosto: costal siempre visible y compacto, sin encimarse con SKU */
   .producto-card__body {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
     min-width: 0;
   }
 
-  .presentaciones {
+  .producto-card__media {
+    display: flex !important;
+    visibility: visible !important;
+    flex: 0 0 3.35rem;
+    align-self: center;
+    width: 3.35rem;
+    min-width: 3.35rem;
+    max-width: 3.35rem;
+    max-height: 7.25rem;
+    overflow: visible;
+  }
+
+  .producto-card__img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     width: 100%;
     max-width: 100%;
+    height: auto;
+    max-height: 7.25rem;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .presentaciones {
+    flex: 1 1 0;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
     gap: 0.7rem;
   }
 
@@ -1949,6 +1974,19 @@ body.modal-open {
 }
 
 @media (max-width: 380px) {
+  .producto-card__media {
+    flex-basis: 2.7rem;
+    width: 2.7rem;
+    min-width: 2.7rem;
+    max-width: 2.7rem;
+    max-height: 6.1rem;
+  }
+
+  .producto-card__img {
+    display: block !important;
+    max-height: 6.1rem;
+  }
+
   .presentacion-peso,
   .presentacion-peso__kg,
   .presentacion-peso__pzs {
