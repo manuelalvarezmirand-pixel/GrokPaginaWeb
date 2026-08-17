@@ -162,18 +162,18 @@
 :root {
   --bg: #011b2b;
   --bg-elevated: #062637;
-  --bg-card: #0d3a54;
+  --bg-card: #011b2b;
   --text-on-dark: #f3f6f9;
   --text-muted-on-dark: rgba(243, 246, 249, 0.72);
   --text-soft-on-dark: rgba(243, 246, 249, 0.55);
 
-  /* Colores de línea de producto (aclarados para contraste sobre navy) */
-  --line-cachorro: #ff5aad;
-  --line-adulto: #4aa3ff;
-  --line-razas-pequenas: #b07cff;
-  --line-veteranos: #c48a84;
-  --line-activo: #ff5a6a;
-  --line-felinos: #00a7e1;
+  /* Colores de línea de producto (textos y acentos) */
+  --line-cachorro: #ff2d8c;
+  --line-adulto: #1aadff;
+  --line-razas-pequenas: #b14dff;
+  --line-veteranos: #e86b64;
+  --line-activo: #ff3d32;
+  --line-felinos: #00b4ef;
 
   /* Acento / CTA */
   --accent: #e2980e;
@@ -196,10 +196,14 @@
 
 html {
   height: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
   min-height: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   font-family: var(--font);
   font-weight: 400;
   color: var(--text-on-dark);
@@ -286,6 +290,8 @@ body {
 body.configurador {
   position: relative;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: clip;
   /*
    * Fondo moderno en azul marino:
    * - brillo suave arriba (más abierto)
@@ -348,52 +354,69 @@ html:has(body.configurador) {
 /* ---------- Contenedor centrado: productos + panel (dos columnas) ---------- */
 
 .page-shell {
-  /* Cajas más anchas: mockup grande + textos + botones sin apretar */
-  --producto-card-width: 26.5rem;
-  --productos-gap: 1.35rem;
-  --shell-col-gap: 1rem; /* espacio fijo entre productos y panel */
-  --productos-block-width: calc(
-    (2 * var(--producto-card-width)) + var(--productos-gap)
+  --producto-card-width: min(26.5rem, 100%);
+  --productos-gap: clamp(0.7rem, 1.4vw, 1.35rem);
+  --shell-col-gap: clamp(0.6rem, 1.2vw, 1rem);
+  --productos-block-width: min(
+    100%,
+    calc((2 * 26.5rem) + var(--productos-gap))
   );
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: flex-start;
-  justify-content: center; /* centra el conjunto productos + panel */
+  justify-content: center;
   gap: var(--shell-col-gap);
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   margin: 0 auto;
-  padding: 5.25rem 1.75rem 2.5rem;
+  padding: 5.25rem clamp(0.7rem, 2vw, 1.75rem) 2.5rem;
   box-sizing: border-box;
 }
 
 /* ---------- Panel derecho sticky (pegado al bloque de productos) ---------- */
 
 .sidebar {
-  --sidebar-fixed-height: 32.5rem;
-  /* Desplazamiento inicial para centrar en viewport (compensa padding del shell) */
-  --sidebar-center-top: max(1rem, calc(50vh - (var(--sidebar-fixed-height) / 2)));
   position: sticky;
-  top: var(--sidebar-center-top);
-  margin-top: max(0px, calc(var(--sidebar-center-top) - 5.25rem));
+  top: 5.25rem;
+  margin-top: 0;
   z-index: 40;
-  flex: 0 0 var(--sidebar-width);
-  width: var(--sidebar-width);
-  max-width: var(--sidebar-width);
-  height: var(--sidebar-fixed-height);
-  max-height: var(--sidebar-fixed-height);
-  min-height: var(--sidebar-fixed-height);
+  flex: 0 1 var(--sidebar-width);
+  width: min(var(--sidebar-width), 100%);
+  max-width: min(var(--sidebar-width), 100%);
+  min-width: 0;
+  height: auto;
+  max-height: calc(100vh - 6.1rem);
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.55rem;
   padding: 0.85rem 0.9rem 0.95rem;
   background: rgba(1, 27, 43, 0.97);
   border: 1px solid rgba(226, 152, 14, 0.32);
   border-radius: 14px;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(16px);
-  overflow: hidden; /* el panel no crece; solo scrollea la lista de alturas */
+  overflow: hidden;
   align-self: flex-start;
+}
+
+.sidebar-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-right: 0.15rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(226, 152, 14, 0.55) rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-panels-toggle {
+  display: none;
 }
 
 .sidebar-section {
@@ -429,28 +452,9 @@ html:has(body.configurador) {
   gap: 0.45rem;
   padding: 0.7rem 0.75rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(18, 72, 108, 0.55);
+  background: rgba(8, 45, 70, 0.55);
   overflow: hidden;
-}
-
-.pallet-status--empty {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.pallet-status--ok {
-  border-color: rgba(46, 204, 113, 0.55);
-  background: rgba(46, 204, 113, 0.1);
-}
-
-.pallet-status--warn {
-  border-color: rgba(226, 152, 14, 0.55);
-  background: rgba(226, 152, 14, 0.1);
-}
-
-.pallet-status--error {
-  border-color: rgba(231, 76, 60, 0.5);
-  background: rgba(231, 76, 60, 0.1);
 }
 
 /* Encabezado / toggle: en desktop se ve como título fijo */
@@ -467,7 +471,7 @@ html:has(body.configurador) {
   color: inherit;
   font: inherit;
   text-align: left;
-  cursor: default;
+  cursor: pointer;
   flex-shrink: 0;
 }
 
@@ -483,7 +487,7 @@ html:has(body.configurador) {
 }
 
 .pallet-status__chevron {
-  display: none;
+  display: block;
   flex-shrink: 0;
   width: 0.55rem;
   height: 0.55rem;
@@ -492,6 +496,10 @@ html:has(body.configurador) {
   transform: rotate(45deg);
   transition: transform 0.2s ease;
   margin-top: -0.2rem;
+}
+
+.pallet-status.is-collapsed .pallet-status__panel {
+  display: none;
 }
 
 .pallet-status:not(.is-collapsed) .pallet-status__chevron {
@@ -664,7 +672,8 @@ html:has(body.configurador) {
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .pallet-status__item-label {
@@ -683,15 +692,22 @@ html:has(body.configurador) {
   color: #ffb84d;
 }
 
-/* Pallets parciales > 0: rojo claro legible (alerta de tarima incompleta) */
+/* Pallets parciales: número en rojo */
 .pallet-status__subitem.is-partial .pallet-status__item-value {
-  color: #ff8a80;
+  color: #ff5a5a;
   font-weight: 800;
 }
 
 .pallet-status--ok .pallet-status__subitem.is-partial .pallet-status__item-value,
-.pallet-status--warn .pallet-status__subitem.is-partial .pallet-status__item-value {
-  color: #ff8a80;
+.pallet-status--warn .pallet-status__subitem.is-partial .pallet-status__item-value,
+.pallet-status--empty .pallet-status__subitem.is-partial .pallet-status__item-value {
+  color: #ff5a5a;
+}
+
+.pallet-status__item.is-total .pallet-status__item-label,
+.pallet-status__item.is-total .pallet-status__item-value {
+  font-weight: 800;
+  color: var(--accent);
 }
 
 .pallet-status__item.is-ok .pallet-status__item-value {
@@ -723,7 +739,7 @@ html:has(body.configurador) {
   line-height: 1.15;
   color: var(--text-muted-on-dark);
   opacity: 0.9;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .pallet-status__sublist {
@@ -750,7 +766,8 @@ html:has(body.configurador) {
 .pallet-status__subitem .pallet-status__item-text {
   grid-column: 2;
   grid-row: 1;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .pallet-status__subbullet {
@@ -776,10 +793,9 @@ html:has(body.configurador) {
 .config-page {
   position: relative;
   z-index: 1;
-  /* Ancho = solo el bloque de cajas (no se estira hasta el panel) */
-  flex: 0 0 auto;
-  width: var(--productos-block-width);
-  max-width: var(--productos-block-width);
+  flex: 1 1 auto;
+  width: auto;
+  max-width: 100%;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -816,24 +832,32 @@ html:has(body.configurador) {
 
 .productos {
   display: grid;
-  grid-template-columns: repeat(2, var(--producto-card-width));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-content: start;
+  align-items: start;
   gap: var(--productos-gap);
-  width: var(--productos-block-width);
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 .producto-card {
   --line-color: #011b2b;
+  --card-bg: var(--bg-card);
   position: relative;
-  width: var(--producto-card-width);
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
+  container-type: inline-size;
+  container-name: producto;
   background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid color-mix(in srgb, var(--line-color) 48%, rgba(255, 255, 255, 0.1));
   border-radius: var(--radius-card);
   padding: 1.45rem 1.45rem 1.4rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
@@ -846,8 +870,12 @@ html:has(body.configurador) {
 }
 
 .producto-card:hover {
-  border-color: color-mix(in srgb, var(--line-color) 40%, transparent);
-  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--line-color) 82%, transparent);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px color-mix(in srgb, var(--line-color) 28%, transparent),
+    0 10px 28px color-mix(in srgb, var(--line-color) 26%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--line-color) 30%, transparent);
   transform: translateY(-2px);
 }
 
@@ -856,11 +884,12 @@ html:has(body.configurador) {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 5px;
   background: var(--line-color);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--line-color) 70%, transparent);
 }
 
-/* Textos de cada línea (incluye título, labels e inputs) */
+/* Textos y acento de cada línea (el fondo de la caja es navy) */
 .producto-card[data-line="cachorro"] {
   --line-color: var(--line-cachorro);
 }
@@ -883,6 +912,7 @@ html:has(body.configurador) {
 
 .producto-card[data-line="felinos"] {
   --line-color: var(--line-felinos);
+  --card-bg: #2e1a46;
   background: #2e1a46;
 }
 
@@ -896,7 +926,7 @@ html:has(body.configurador) {
   text-align: center;
   color: var(--line-color);
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--line-color) 28%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line-color) 42%, transparent);
 }
 
 /* Cuerpo de la caja: mockup a la izquierda + presentaciones a la derecha */
@@ -911,19 +941,20 @@ html:has(body.configurador) {
 
 /* Contenedor del costal: estira al alto del bloque de presentaciones (tamaño actual) */
 .producto-card__media {
-  flex: 0 0 auto;
+  flex: 0 1 6.75rem;
   display: flex;
   align-items: stretch;
   align-self: stretch;
-  width: 6.75rem;
+  width: clamp(4.25rem, 28%, 6.75rem);
   max-width: 6.75rem;
-  min-width: 6.75rem;
+  min-width: 0;
 }
 
 /* El costal llena el alto de la caja de la fórmula */
 .producto-card__img {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center center;
@@ -938,14 +969,29 @@ html:has(body.configurador) {
   gap: 0.9rem;
   flex: 1 1 auto;
   min-width: 0;
+  width: 100%;
 }
 
 .presentacion {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
+  justify-items: end;
+  column-gap: 0.75rem;
   min-height: 2.5rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.presentacion-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.12rem;
+  min-width: 0;
+  width: 100%;
+  text-align: right;
 }
 
 .presentacion-peso {
@@ -954,20 +1000,31 @@ html:has(body.configurador) {
   font-weight: 600;
   color: var(--line-color);
   line-height: 1.3;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 3.75rem;
   text-align: right;
   opacity: 0.95;
   white-space: nowrap;
 }
 
-/* Cajas: dos renglones, misma altura que botones +/- */
+.presentacion-precio {
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--line-color);
+  opacity: 0.82;
+  white-space: nowrap;
+}
+
+/* Cajas: kg + pzs, el precio va debajo en .presentacion-meta */
 .presentacion-peso--caja {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  height: 2.6rem; /* igual a .qty-controls */
+  height: auto;
   gap: 0.1rem;
   line-height: 1.1;
   white-space: normal;
@@ -991,11 +1048,13 @@ html:has(body.configurador) {
 .qty-controls {
   --qty-input-width: 4.25rem;
   --qty-btn-width: calc(var(--qty-input-width) * 0.75); /* 75% del input */
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--qty-btn-width) var(--qty-input-width) var(--qty-btn-width);
   align-items: stretch;
   gap: 0.35rem;
-  flex: 0 0 auto;
-  flex-shrink: 0;
+  flex: none;
+  width: max-content;
+  justify-self: end;
   height: 2.6rem;
 }
 
@@ -1003,7 +1062,9 @@ html:has(body.configurador) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--qty-btn-width);
+  width: 100%;
+  min-width: 0;
+  flex: none;
   height: 100%;
   flex-shrink: 0;
   padding: 0;
@@ -1012,8 +1073,8 @@ html:has(body.configurador) {
   font-weight: 700;
   line-height: 1;
   color: var(--line-color);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid color-mix(in srgb, var(--line-color) 45%, transparent);
+  background: color-mix(in srgb, var(--line-color) 16%, rgba(0, 0, 0, 0.28));
+  border: 1px solid color-mix(in srgb, var(--line-color) 62%, transparent);
   border-radius: 8px;
   cursor: pointer;
   transition:
@@ -1024,8 +1085,8 @@ html:has(body.configurador) {
 }
 
 .btn-qty:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: color-mix(in srgb, var(--line-color) 65%, transparent);
+  background: color-mix(in srgb, var(--line-color) 28%, rgba(0, 0, 0, 0.22));
+  border-color: color-mix(in srgb, var(--line-color) 85%, transparent);
 }
 
 .btn-qty:active {
@@ -1038,7 +1099,10 @@ html:has(body.configurador) {
 }
 
 .presentacion input[type="number"] {
-  width: var(--qty-input-width);
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  flex: none;
   height: 100%;
   padding: 0 0.35rem;
   font-family: var(--font);
@@ -1047,12 +1111,16 @@ html:has(body.configurador) {
   font-variant-numeric: tabular-nums;
   text-align: center;
   color: var(--line-color);
-  background: rgba(1, 27, 43, 0.45);
-  border: 1px solid color-mix(in srgb, var(--line-color) 40%, transparent);
+  background: color-mix(in srgb, var(--line-color) 10%, rgba(1, 12, 22, 0.55));
+  border: 1px solid color-mix(in srgb, var(--line-color) 55%, transparent);
   border-radius: var(--radius-sm);
+  color-scheme: dark;
+  caret-color: #f3f6f9;
   transition:
     border-color var(--transition),
-    box-shadow var(--transition);
+    box-shadow var(--transition),
+    background var(--transition),
+    color var(--transition);
   -moz-appearance: textfield;
 }
 
@@ -1066,10 +1134,88 @@ html:has(body.configurador) {
   border-color: color-mix(in srgb, var(--line-color) 50%, transparent);
 }
 
-.presentacion input[type="number"]:focus {
+.presentacion input[type="number"]:focus,
+.presentacion input[type="number"]:focus-visible,
+.presentacion input[type="number"].is-focused {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(226, 152, 14, 0.28);
+  background: #2c333c;
+  color: #f3f6f9;
+  border-color: #6b7280;
+  box-shadow: inset 0 0 0 1px #1b2026;
+}
+
+.presentacion input[type="number"]::selection,
+.presentacion input[type="number"].is-focused::selection {
+  background: #3f4752;
+  color: #f8fafc;
+}
+
+.presentacion input[type="number"]::-moz-selection,
+.presentacion input[type="number"].is-focused::-moz-selection {
+  background: #3f4752;
+  color: #f8fafc;
+}
+
+/* La caja se comprime con la ventana: nada se recorta, todo se reacomoda */
+@container producto (max-width: 24rem) {
+  .producto-card__media {
+    width: 4.6rem;
+    max-width: 4.6rem;
+  }
+
+  .qty-controls {
+    --qty-input-width: 3rem;
+    --qty-btn-width: 2.35rem;
+    gap: 0.25rem;
+    height: 2.45rem;
+  }
+
+  .presentacion {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --sidebar-width: 18.5rem;
+  }
+
+  .productos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .producto-card__body {
+    justify-content: flex-start;
+    gap: 1.25rem;
+  }
+
+  .producto-card__media {
+    flex: 0 0 auto;
+    align-self: center;
+    width: 6.75rem;
+    max-width: 6.75rem;
+    max-height: 11rem;
+  }
+
+  .producto-card__img {
+    height: auto;
+    max-height: 11rem;
+  }
+
+  .presentaciones {
+    flex: 1 1 auto;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .pallet-status__item {
+    font-size: 0.78rem;
+  }
+
+  .pallet-status__subitem {
+    font-size: 0.74rem;
+  }
 }
 
 /* ---------- Mensaje de validación (área de contenido) ---------- */
@@ -1122,18 +1268,20 @@ html:has(body.configurador) {
 }
 
 .resumen-valor {
-  display: inline-flex;
+  display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 0.4em;
+  gap: 0.15em;
+  width: 100%;
   font-family: var(--font);
-  font-size: 2rem;
+  font-size: 1.28rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   color: var(--accent);
-  line-height: 1.1;
-  margin: 0.15rem 0;
+  line-height: 1.2;
+  margin: 0.08rem 0;
+  text-align: center;
 }
 
 .resumen-limites {
@@ -1145,84 +1293,48 @@ html:has(body.configurador) {
   max-width: none;
 }
 
-/* Slot fijo: el resplandor no empuja el texto "kg" */
-.total-kg-slot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 4.5ch;
-  position: relative;
-  z-index: 0;
-  overflow: visible;
+.pallet-status__limites {
+  margin: 0.45rem 0 0;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
 }
 
-.resumen-valor #total-kg {
-  color: var(--accent);
+.resumen-valor .total-flash {
   display: inline-block;
   position: relative;
   z-index: 1;
   border-radius: 6px;
-  padding: 0 0.15em;
-  /* El glow va en pseudo-elemento para no alterar el flujo del layout */
+  padding: 0 0.12em;
+  color: var(--accent);
+  white-space: nowrap;
 }
 
 .total-kg-unit {
-  flex-shrink: 0;
-  color: var(--accent);
-  font-size: 1.15rem;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
 }
 
-/* Destello blanco intenso sin desplazar "kg" */
 @keyframes total-kg-flash {
   0% {
     color: #ffffff;
-    text-shadow:
-      0 0 8px #fff,
-      0 0 16px #fff,
-      0 0 28px rgba(255, 255, 255, 0.95),
-      0 0 42px rgba(255, 255, 255, 0.75);
-  }
-  40% {
-    color: #ffffff;
-    text-shadow:
-      0 0 6px #fff,
-      0 0 14px rgba(255, 255, 255, 0.95),
-      0 0 24px rgba(255, 255, 255, 0.7);
   }
   100% {
     color: var(--accent);
-    text-shadow: none;
   }
 }
 
-@keyframes total-kg-glow {
-  0% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.8);
-  }
+.resumen-valor .total-flash.total-kg--flash {
+  animation: total-kg-flash 0.28s ease-out;
 }
 
-#total-kg.total-kg--flash {
-  animation: total-kg-flash 0.55s ease-out;
-}
-
-#total-kg.total-kg--flash::after {
-  content: "";
-  position: absolute;
-  inset: -0.15em -0.25em;
-  z-index: -1;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow:
-    0 0 12px 2px rgba(255, 255, 255, 0.95),
-    0 0 28px 8px rgba(255, 255, 255, 0.7),
-    0 0 48px 14px rgba(255, 255, 255, 0.4);
-  pointer-events: none;
-  animation: total-kg-glow 0.55s ease-out forwards;
+.total-currency {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
 }
 
 /* CARGAR CARRITO — siempre activo, acento dorado */
@@ -1484,24 +1596,6 @@ body.modal-open {
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1100px) {
-  :root {
-    --sidebar-width: 20.5rem;
-  }
-
-  .resumen-valor {
-    font-size: 1.7rem;
-  }
-
-  .pallet-status__item {
-    font-size: 0.78rem;
-  }
-
-  .pallet-status__subitem {
-    font-size: 0.74rem;
-  }
-}
-
 @media (max-width: 800px) {
   :root {
     --sidebar-width: 100%;
@@ -1515,7 +1609,7 @@ body.modal-open {
     --producto-card-width: 100%;
     --productos-block-width: 100%;
     display: block;
-    padding: 4.75rem 1rem 52vh;
+    padding: 4.75rem 1rem 14.5rem;
   }
 
   .config-page {
@@ -1531,34 +1625,159 @@ body.modal-open {
   .sidebar {
     position: fixed;
     top: auto;
-    bottom: 0.65rem;
-    left: 0.65rem;
-    right: 0.65rem;
+    bottom: 0.55rem;
+    left: 0.55rem;
+    right: 0.55rem;
     margin-top: 0;
     width: auto;
     max-width: none;
     flex: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, auto) auto;
     height: auto;
-    max-height: min(70vh, 28rem);
+    max-height: min(78vh, 38rem);
     min-height: 0;
-    flex-direction: column;
     border-radius: 14px;
     box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
-    padding: 0.7rem 0.85rem 0.8rem;
-    gap: 0.55rem;
+    padding: 0.55rem 0.55rem 0.55rem;
+    gap: 0.4rem;
     overflow: hidden;
     z-index: 55;
   }
 
+  .sidebar-scroll {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.4rem;
+  }
+
   .sidebar-total-block {
-    padding: 0.55rem 0.65rem;
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0.5rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: 5.7rem;
+  }
+
+  .resumen-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
   }
 
   .resumen-valor {
-    font-size: 1.45rem;
+    font-size: 1.05rem;
+    margin: 0.06rem 0;
   }
 
-  /* Estado del pedido: colapsable en pantallas angostas */
+  .resumen-valor .total-flash {
+    white-space: nowrap;
+  }
+
+  .sidebar-actions {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 0.32rem;
+    margin: 0;
+    min-height: 5.7rem;
+  }
+
+  .sidebar-actions .btn-cargar,
+  .sidebar-actions .btn-borrar {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.65rem;
+    height: 2.65rem;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.03em;
+    border-radius: 10px;
+  }
+
+  .sidebar-actions .btn-borrar.btn-borrar--confirm {
+    font-size: 0.64rem;
+    padding: 0.35rem 0.35rem;
+  }
+
+  .sidebar-panels-toggle {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 1.6rem;
+    align-items: stretch;
+    gap: 0.4rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sidebar-panels-toggle__box {
+    display: flex;
+    align-items: center;
+    min-height: 2.35rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: 12px;
+    border: 1px solid rgba(18, 72, 108, 0.55);
+    background: rgba(8, 45, 70, 0.55);
+    font-family: var(--font);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft-on-dark);
+    text-align: left;
+  }
+
+  .sidebar-panels-toggle .pallet-status__chevron {
+    display: block;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .sidebar-panels-toggle.is-expanded .pallet-status__chevron,
+  .sidebar-panels-toggle[aria-expanded="true"] .pallet-status__chevron {
+    transform: rotate(225deg);
+    margin-top: 0.15rem;
+  }
+
+  .sidebar-panels-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Colapsadas: títulos en el renglón compartido. Expandidas: título dentro de cada caja */
+  .pallet-status__toggle {
+    display: none;
+  }
+
+  .sidebar-scroll.is-expanded .sidebar-panels-toggle {
+    display: none;
+  }
+
+  .sidebar-scroll.is-expanded .pallet-status__toggle {
+    display: flex;
+    cursor: pointer;
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.15rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
   .pallet-status {
     min-height: 0;
     overflow: hidden;
@@ -1567,79 +1786,39 @@ body.modal-open {
     gap: 0;
   }
 
-  .pallet-status__toggle {
-    cursor: pointer;
-    padding: 0.25rem 0;
-    border-radius: 6px;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .pallet-status__toggle:hover .pallet-status__title,
-  .pallet-status__toggle:focus-visible .pallet-status__title {
-    color: var(--text-on-dark);
-  }
-
-  .pallet-status__toggle:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .pallet-status__toggle:active {
-    opacity: 0.85;
-  }
-
-  .pallet-status__chevron {
-    display: block;
-  }
-
-  .pallet-status.is-collapsed .pallet-status__panel {
+  .pallet-status.is-collapsed {
     display: none;
   }
 
   .pallet-status:not(.is-collapsed) {
-    flex: 1 1 auto;
-    gap: 0.45rem;
-    padding-bottom: 0.65rem;
+    display: flex;
+    flex: 0 1 auto;
+    min-width: 0;
+    gap: 0.3rem;
+    padding: 0.5rem 0.55rem 0.55rem;
   }
 
   .pallet-status:not(.is-collapsed) .pallet-status__panel {
     display: flex;
-    overflow-y: auto;
-    max-height: 11rem;
-    padding-top: 0.35rem;
+    overflow: visible;
+    max-height: none;
+    padding-top: 0;
+  }
+
+  .pallet-status__item {
+    font-size: 0.68rem;
+  }
+
+  .pallet-status__subitem {
+    font-size: 0.64rem;
+  }
+
+  .pallet-status__limites {
+    font-size: 0.62rem;
   }
 
   .pallet-status__heights {
     max-height: 4.5rem;
-  }
-
-  .sidebar-actions {
-    margin-top: 0;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: stretch;
-  }
-
-  /* En angosto: BORRAR izquierda · CARGAR derecha */
-  .sidebar-actions .btn-borrar {
-    order: 1;
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 0.65rem 0.35rem;
-    font-size: 0.62rem;
-  }
-
-  .sidebar-actions .btn-cargar {
-    order: 2;
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 0.65rem 0.35rem;
-    font-size: 0.65rem;
-  }
-
-  .sidebar-actions .btn-borrar.btn-borrar--confirm {
-    font-size: 0.55rem;
-    padding: 0.55rem 0.25rem;
   }
 
   .validacion-msg {
@@ -1651,6 +1830,96 @@ body.modal-open {
 
   .producto-card {
     width: 100%;
+    padding: 1.05rem 0.9rem 1rem;
+    gap: 0.85rem;
+  }
+
+  /* En celular: sin costales, solo nombre + presentaciones */
+  .producto-card__media,
+  .producto-card__img {
+    display: none !important;
+  }
+
+  .producto-card__body {
+    display: block;
+    min-width: 0;
+  }
+
+  .presentaciones {
+    width: 100%;
+    max-width: 100%;
+    gap: 0.7rem;
+  }
+
+  .presentacion {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: end;
+    column-gap: 0.5rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .presentacion-meta {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .presentacion-peso {
+    flex: none;
+    min-width: 0;
+    text-align: right;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .presentacion-precio {
+    font-size: 0.72rem;
+    text-align: right;
+  }
+
+  .presentacion-peso--caja {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    height: auto;
+    gap: 0.08rem;
+    white-space: nowrap;
+  }
+
+  .presentacion-peso__kg,
+  .presentacion-peso__pzs {
+    display: inline;
+    font-size: 0.88rem;
+    line-height: 1.2;
+  }
+
+  .presentacion-peso__pzs {
+    font-weight: 500;
+  }
+
+  .qty-controls {
+    --qty-input-width: 2.85rem;
+    --qty-btn-width: 2.4rem;
+    display: grid;
+    grid-template-columns: var(--qty-btn-width) var(--qty-input-width) var(--qty-btn-width);
+    flex: none;
+    flex-shrink: 0;
+    gap: 0.25rem;
+    width: max-content;
+    height: 2.65rem;
+  }
+
+  .btn-qty,
+  .presentacion input[type="number"] {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: none;
+    font-size: 0.9rem;
+    padding: 0;
   }
 }
 
@@ -1661,5 +1930,34 @@ body.modal-open {
 
   .config-page {
     gap: 1.35rem;
+  }
+
+  .page-shell {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .producto-card {
+    width: 100%;
+    padding: 0.95rem 0.8rem 0.9rem;
+  }
+
+  .producto-nombre {
+    font-size: 0.86rem;
+    padding-bottom: 0.7rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .presentacion-peso,
+  .presentacion-peso__kg,
+  .presentacion-peso__pzs {
+    font-size: 0.8rem;
+  }
+
+  .qty-controls {
+    --qty-input-width: 2.6rem;
+    --qty-btn-width: 2.2rem;
+    height: 2.5rem;
   }
 }
